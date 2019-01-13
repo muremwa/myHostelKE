@@ -1,0 +1,17 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="django.db.models.fields.related.ForeignKey.available_rooms" />
+          <option value="myhostel.book.models.Room.roomimage_set" />
+          <option value="myhostel.book.models.Hostel.hostelimage_set" />
+          <option value="django.db.models.fields.related.ForeignKey.save" />
+          <option value="django.db.models.fields.related.ForeignKey.all_rooms" />
+          <option value="django.db.models.fields.related.ForeignKey.hostel" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

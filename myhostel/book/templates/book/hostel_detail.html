@@ -1,0 +1,127 @@
+{% extends "home/base.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ hostel.name }}{% endblock title %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'book/css/hostel_list.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'book/css/hostel_detail.css' %}">
+{% endblock style %}
+
+{% block home %}active{% endblock home %}
+
+{% block crumb %}<li class="breadcrumb-item active">{{ hostel.name }}</li>{% endblock crumb %}
+
+{% block content %}
+
+
+<div id="main" class="container-fluid">
+    <div id="top-info" class="row">
+        <!-- Main image-->
+        <div class="col-md-6">
+            <h1 class="text-center">{{ hostel.name }}</h1>
+            <img name="main-image" id="big-image" src="{{ hostel.get_main_image.file.url }}" alt="main-image">
+        </div>
+
+        <!-- Side bar with more info -->
+        <div id="side-bar" class="col-md-6">
+
+            <div class="locate text-center">
+                <span id="locate-pin"><img src="{% static 'svg/place.svg' %}" alt="place ico"> {{ hostel.location}}</span>
+            </div>
+
+            <h2 class="text-center">more images for {{ hostel.name }}</h2>
+            <hr>
+
+            <div class="row">
+                {% for image in hostel.hostelimage_set.all %}
+                    {% if not image.is_main %}
+                        <img data-toggle="tooltip" data-placement="top" title="click to enlarge" class="col-sm-4 small-images" src="{{ image.file.url }}" alt="">
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="info">
+                <h3>features</h3>
+                <ul>
+                    <li>{% if hostel.water %}Free water available{% else %}No free water{% endif %}</li>
+                    <li>{% if hostel.electricity %}Free electricity available{% else %}No free electricity{% endif %}</li>
+                    <li>{{ hostel.name }} is {{ hostel.distance_from_admin }} meters from the admnistartion block.</li>
+                    <li>Prices range from Ksh.{{ hostel.price_range}}</li>
+                    {% if hostel.available_rooms %}
+                        <li>{{ hostel.available_rooms }} room(s) are available</li>
+                    {% else %}
+                        <li>No rooms available</li>
+                    {% endif %}
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <hr class="main-divider">
+
+    <div style="color: #4a4c64;" class="available-rooms">
+        <div class="container text-center">
+            <h2>rooms at the {{ hostel.name }} ({{hostel.available_rooms}})</h2>
+        </div>
+
+
+        <!-- Rooms in the hostel -->
+        <div class="row">
+            {% for room in hostel.room_set.all %}
+                {% if room.available %}
+                    <div class="card room">
+                        <a href="{% url 'book:room' hostel.slug room.room_number %}"><img src="{{ room.get_main_image.file.url }}" alt="image of a room" class="card-img-top"></a>
+                        <div class="card-body">
+                            <h4 class="card-text">{{ room.get_house_type }}</h4>
+                            <div class="row">
+                                <p class="col-sm-6">price:<br /> Ksh. {{room.price}} per month</p>
+                                <div class="col-sm-6 text-right">
+                                    <a href="{% url 'book:room' hostel.slug room.room_number %}"><img data-toggle="tooltip" data-placement="left" title="book this room at Ksh.{{ room.price }} monthly" style="height: 40%;" src="{% static 'svg/book.svg' %}" alt=""></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <hr class="main-divider">
+
+    {% if hostel_suggestions %}
+        <div class="suggested-hostels">
+            <div style="margin-bottom: 4em;" class='text-center'>
+                <h1>more hostels at {{ hostel.institution }}</h1>
+            </div>
+
+            <div class="container row">
+                {% for s_hostel in hostel_suggestions %}
+                    <div class="card hostel">
+                        <a href="{% url 'book:hostel' s_hostel.slug %}"><img class="card-img-top" src="{{ s_hostel.get_main_image.file.url }}" alt="image for {{ s_hostel }}"></a>
+                        <div class="card-body">
+                            <a href="{% url 'book:hostel' s_hostel.slug %}"><h4 class="card-title">{{ s_hostel.name }}</h4></a>
+                            <div class="row">
+                                <p class="col-md-6"><img class="locate-pin-hostel" src="{% static 'svg/place.svg' %}" alt=""> {{ s_hostel.location }}</p>
+                                <p class="col-md-6"><img class="locate-pin-hostel" src="{% static 'svg/bed.svg' %}" alt=""> {{ s_hostel.available_rooms }} rooms available</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %} 
+        <div class="container col-md-7 text-center"><h2>no suggestions for more hostels</h2></div>
+    {% endif %}
+
+
+    
+
+
+</div>
+
+{% endblock content %}
+
+{% block script %}<script src="{% static 'book/js/hostel_detail.js' %}"></script>{% endblock script %}

@@ -1,0 +1,36 @@
+{% extends "home/base.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ room }}{% endblock title %}
+
+{% block style %}<link rel='stylesheet' type='text/css' href="{% static 'book/css/room.css' %}">{% endblock style %}
+
+{% block crumb %}
+<li class="breadcrumb-item"><a href="{% url 'book:hostel' room.hostel.slug  %}">{{ room.hostel.name }}</a></li>
+<li class="breadcrumb-item active">{{ room.room_number }}</li>
+{% endblock crumb %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="top">
+        <img id="main-image" src="{{ room.get_main_image.file.url }}" alt="">
+    </div>
+
+    <hr>
+
+    <div class="row container">
+        <div class="info col-sm-6">
+        <h2>{{ room.room_number }}<small> at the {{ room.hostel}}</small></h2>
+        <p>Book this {{ room.get_house_type }} at Ksh. {{ room.price }} monthly</p>       
+        </div>
+
+        <div class="col-sm-6">
+            <a href="{% url 'book:now' room.hostel.slug room.room_number %}" id='book-button'>BOOK</a>
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}

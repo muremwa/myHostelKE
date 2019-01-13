@@ -1,0 +1,60 @@
+#top-info {
+    margin-bottom: 7em;
+}
+
+.small-images {
+    width: 37%;
+    margin-top: 1em;
+    cursor: pointer;
+}
+
+
+#other-images {
+    margin-top: 1em;
+}
+
+#big-image {
+    width: 100%;
+}
+
+#side-bar {
+    margin-top: 2em;
+}
+
+#locate-pin {
+    font-size: 1.3em;
+}
+
+.info {
+    margin-top: 5em;
+    padding-left: 10%;
+}
+
+.main-divider {
+    border-top-color: #4a4c64;
+    border-top-width: 0.12em;
+    margin: 3em;
+}
+
+.info ul {
+    list-style-type: circle;
+}
+
+.room {
+    background-color: #b6b5b6;
+    width: 18em;
+}
+
+.suggested-hostels {
+    margin-left: 5%;
+}
+
+.hostel {
+    width: 26em;
+    margin: 1em;
+    background-color: pink;
+}
+
+.locate-pin-hostel {
+    height: 2em;
+}

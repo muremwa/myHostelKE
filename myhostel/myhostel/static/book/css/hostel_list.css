@@ -1,0 +1,61 @@
+.hostel {
+    margin-bottom: 2em;
+    width: 100%;
+    /* background-color: #4e555c; */
+    background-color: pink;
+    color: cadetblue;
+}
+
+.hostel a {
+    color: rgb(174, 175, 175);
+}
+
+.side-cards {
+    margin-top: 2em;
+}
+
+.hostel a:hover {
+    text-decoration: none;
+}
+
+.hostel-info {
+    padding: 4em;
+}
+
+.hostel-image {
+    width: 100%;
+}
+
+#hostel-line {
+    border-top-color: rgb(174, 175, 175);
+}
+
+#main {
+    margin-top: 2em;
+}
+
+.bottom-image {
+    height: 35vh;
+    margin-bottom: 8em;
+    margin-top: 1em;
+}
+
+
+#book-button {
+    background-color: gold;
+}
+
+#sub-main {
+    margin-bottom: 5em;
+}
+
+.room {
+    margin: 1em;
+}
+
+@media screen and ( max-width: 400px){
+    .room {
+        color: green;
+        width: 30%;
+    }
+}

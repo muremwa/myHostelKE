@@ -1,0 +1,69 @@
+{% extends "home/base.html" %}
+{% load staticfiles %}
+
+{% block title %}book {{ room }}{% endblock title %}
+
+{% block style %}{% endblock style %}
+
+{% block crumb %}
+<li class="breadcrumb-item"><a href="{% url 'book:hostel' room.hostel.slug  %}">{{ room.hostel.name }}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'book:room' room.hostel.slug room.room_number %}">{{ room.room_number}}</a></li>
+<li class="breadcrumb-item">book now</li>
+{% endblock crumb %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="alert alert-primary">
+                <p>please provide a name and phone number we could use to contact you</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <form action="" method="post">
+                {% csrf_token %}
+
+                {% if form.errors %}
+                    <p class="alert alert-danger">please correct the errors below</p>
+                {% endif %}
+
+                {% for field in form %}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <p class="alert alert-warning">{{ error }}</p>
+                        {% endfor %}
+                    {% else %}
+                        {% if field.help_text %}
+                            <div class="alert alert-info">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                {{ field.help_text }}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
+                    <div class="form-group">
+                        <label for="">{{ field.label }}</label><br />
+                        {{ field }}
+                    </div>
+                {% endfor %}
+
+                <div class="form-group">
+                    <input class="btn" style="background: pink" type="submit" value="book now">
+                </div>
+
+
+
+                <script>
+                    var ins = document.getElementsByTagName('input');
+                    for (inp in ins) {
+                        ins[inp].classList.add('form-control');
+                    }
+                </script>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

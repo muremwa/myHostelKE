@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+    <title>myHostelKenya | {% block title %}home{% endblock title %}</title>
+    <link rel='stylesheet' type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel='stylesheet' type="text/css" href="{% static 'css/base.css' %}">
+    {% block style %}{% endblock style %}
+</head>
+<body>
+
+        <nav id="navbar" class="navbar navbar-expand-lg" style="background-color: pink;">
+            <a id="brand-title" class="navbar-brand" href="{% url 'book:index' %}">myHostelKenya</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+              
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item {% block home %}{% endblock %}">
+                        <a class="nav-link" href="{% url 'book:index' %}">Home</a>
+                    </li>
+                    <li class="nav-item {% block book %}{% endblock %}">
+                        <a class="nav-link" href="">book now</a>
+                    </li>
+                </ul>
+              <form method="GET" action="" class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-4" type="search" name="query" value="" placeholder="Search for hostels" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              </form>
+
+        </nav>
+        <nav aria-label="breadcrumb">
+          <ol style="padding-left: 20%;"  class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'book:index'  %}">Home</a></li>
+            {% block crumb %}{% endblock crumb %}
+          </ol>
+        </nav>
+
+    {% block content %}
+    
+    {% endblock content %}
+
+
+<footer class="section footer-classic context-dark bg-image" style="background: pink;color: black;">
+        <div class="container">
+          <div class="row row-30">
+            <div class="col-md-4 col-xl-5">
+              <div class="pr-xl-4"><a class="brand" href=""><img class="brand-logo-light" src="images/agency/logo-inverse-140x37.png" alt="" width="140" height="37" srcset="images/agency/logo-retina-inverse-280x74.png 2x"></a>
+                <p>We are an award-winning creative agency, dedicated to the best result in web design, promotion, business consulting, and marketing.</p>
+                <!-- Rights-->
+                <p class="rights"><span>©  </span><span class="copyright-year">2018</span><span> </span><span>Waves</span><span>. </span><span>All Rights Reserved.</span></p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <h5>Contacts</h5>
+              <dl class="contact-list">
+                <dt>Address:</dt>
+                <dd style="color: black;">798 South Park Avenue, Jaipur, Raj</dd>
+              </dl>
+              <dl class="contact-list">
+                <dt>email:</dt>
+                <dd><a style="color: black;" href="mailto:#">dkstudioin@gmail.com</a></dd>
+              </dl>
+              <dl class="contact-list">
+                <dt>phones:</dt>
+                <dd><a style="color: black;" href="tel:#">+91 7568543012</a> <span>or</span> <a style="color: black;" href="tel:#">+91 9571195353</a>
+                </dd>
+              </dl>
+            </div>
+            <div class="col-md-4 col-xl-3">
+              <h5>Links</h5>
+              <ul class="nav-list">
+                <li><a style="color: black;" href="#">About</a></li>
+                <li><a style="color: black;" href="#">Projects</a></li>
+                <li><a style="color: black;" href="#">Contacts</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/base.js' %}"></script>
+    {% block script %}{% endblock script %}
+</body>
+</html>

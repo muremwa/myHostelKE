@@ -1,0 +1,82 @@
+{% extends "home/base.html" %}
+
+{% load staticfiles %}
+{% block style %}<link rel='stylesheet' type="text/css" href="{% static 'book/css/hostel_list.css' %}"> {% endblock style %}
+{% block home %}active{% endblock home %}
+
+{% block content %}
+
+<div class='container'>
+    <div class="row">
+        <div class="col-md-9">
+            {% for hostel in hostels %}
+                <div class="card hostel">
+                    <div class="row">
+                        <img class="col-md-7 hostel-image" src='{{ hostel.get_main_image.file.url }}'>
+                        <div class="col-md-5 hostel-info">
+                            <a href="{% url 'book:hostel' hostel.slug %}"><h2 class="text-center" data-toggle="tooltip" data-placement="top" title="{{ hostel }}">{{ hostel.name }}</h2></a>
+                            <hr id="hostel-line">
+                            <p>Institution: {{ hostel.institution }}</p>
+                            <p>Distance from admnistration block is {{ hostel.distance_from_admin }}m.</p>
+                            <p>Price range: Ksh {{ hostel.price_range }}</p>
+                            <div>
+                                <p><strong>{% if hostel.available_rooms %}{{ hostel.available_rooms }} room(s) are{% else %}No rooms{% endif %} available</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-3">
+
+            <!-- popular content -->
+            <div class="card side-cards">
+                <img src="http://127.0.0.1/images/new/n_last_jedi.jpg" alt="" class="card-img-top">
+                <div class="card-body">
+                    <span class="card-title text-center">popular now</span>
+                    <hr>
+                    <ul>
+                        <li class="item1"><a href="">RAW</a></li>
+                        <li class="item2"><a href="">Smackdown Live</a></li>
+                        <li class="item3"><a href="">NXT</a></li>
+                        <li class="item4"><a href="">205 Live</a></li>
+                        <li class="item5"><a href="">Mixed match challenge</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card side-cards">
+                <img src="http://127.0.0.1/images/new/n_last_jedi.jpg" alt="" class="card-img-top">
+                <div class="card-body">
+                    <span class="card-title text-center">filter now</span>
+                    <hr>
+                    <ul>
+                        <li class="item1"><a href="">Institution</a></li>
+                        <li class="item2"><a href="">Price</a></li>
+                        <li class="item3"><a href="">House types</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- price filters-->
+            <div class="card side-cards">
+                <img src="http://127.0.0.1/images/new/n_last_jedi.jpg" alt="" class="card-img-top">
+                <div class="card-body">
+                    <span class="card-title text-center">price groups</span>
+                    <hr>
+                    <ul>
+                        <li class="item1"><a href="">below 3000</a></li>
+                        <li class="item1"><a href="">3000-4000</a></li>
+                        <li class="item2"><a href="">4000-7000</a></li>
+                        <li class="item3"><a href="">above 7000</a></li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
