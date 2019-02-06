@@ -14,23 +14,47 @@
 {% block content %}
 
 <div class="container-fluid">
-    <div class="top">
-        <img id="main-image" src="{{ room.get_main_image.file.url }}" alt="">
-    </div>
-
-    <hr>
-
-    <div class="row container">
-        <div class="info col-sm-6">
-        <h2>{{ room.room_number }}<small> at the {{ room.hostel}}</small></h2>
-        <p>Book this {{ room.get_house_type }} at Ksh. {{ room.price }} monthly</p>       
+    <div class="row">
+        <div class="top col-md-6">
+            <img id="main-image" src="{{ room.get_main_image.file.url }}" alt="">
         </div>
 
-        <div class="col-sm-6">
-            <a href="{% url 'book:now' room.hostel.slug room.room_number %}" id='book-button'>BOOK</a>
+        <div class="info">
+            <h2>{{ room.room_number }}<small> at the <a href="{% url 'book:hostel' room.hostel.slug %}">{{ room.hostel}}</a></small></h2>
+            <p>{{ room.get_house_type }} at Ksh. {{ room.price }} monthly</p>   
+
+            <div id="action-buttons" class="row">
+                <div class="col-6"><a href="{% url 'book:now' room.hostel.slug room.room_number %}" class="btn btn-outline-dark">book now</a></div>
+                <div class="col-6"><a href="{% url 'book:hostel' room.hostel.slug %}" class="btn btn-outline-dark">explore {{ room.hostel.name }}</a></div>
+            </div>    
+            {% if user.is_staff %}
+                <div style="margin: 5em;" class="">
+                    <a href="{% url 'admin:book_room_change' room.id %}" style='width: 7em;' class="btn btn-dark">Edit</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="more-info">
+
+        <h2>More images of {{ room.room_number }}</h2>
+
+        <!-- more images -->
+        <div class="row">
+            {% for image in room.roomimage_set.all %}
+                {% if not image.is_main %}  
+                    <div class="col-sm-2 room-image">
+                        <img class="small-images over-js-img" src="{{ image.file.url }}" alt="">
+                    </div> 
+                {% endif %}
+            {% endfor %}
         </div>
     </div>
 
 </div>
 
+{% include 'home/over_view.html' %}
+
 {% endblock content %}
+
+{% block script %}<script src="{% static 'book/js/room.js' %}"></script>{% endblock script %}

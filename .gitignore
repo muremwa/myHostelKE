@@ -1,2 +1,8 @@
 venv/*
 myhostel/media/*
+.idea/*
+*.xml
+.idea/inspectionProfiles/Project_Default.xml
+myhostel/db.sqlite3
+*.pyc
+*.exe

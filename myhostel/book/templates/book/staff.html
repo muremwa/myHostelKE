@@ -1,0 +1,25 @@
+{% extends "home/base.html" %}
+{% load staticfiles %}
+
+{% block title %}Staff Home{% endblock title %}
+
+{% block style %}<link rel="stylesheet" type="text/css" href="{% static 'book/css/staff.css' %}">{% endblock style %}
+
+{% block crumb %}
+<li class="breadcrumb-item">Staff Actions</li>
+{% endblock crumb %}
+
+{% block content %}
+
+    <div id="wide" class="container col-md-6">
+        <h2>Available actions as a member of staff</h2>
+
+        <ul class="col-md-10">
+            <li class="staff-actions"><a href="{% url 'add-hostel' %}" class="btn btn-outline-dark">add hostel</a></li>
+            <li class="staff-actions"><a href="" class="btn btn-outline-dark">See bookings</a></li>
+            <li class="staff-actions"><a href="" class="btn btn-outline-dark">Restore room</a></li>
+        </ul>
+
+    </div>
+
+{% endblock content %}

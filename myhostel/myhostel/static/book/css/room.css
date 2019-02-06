@@ -8,8 +8,28 @@
 }
 
 #main-image {
-    max-width: 50%;
+    width: 100%;
 }
 
+#action-buttons * {
+    width: 100%;
+}
 
+.info {
+    padding: 1em;
+}
+
+.info h2 a {
+    text-decoration: none;
+}
+
+.more-info {
+    margin-top: 3em;
+}
+
+.room-image img {
+    width: 100%;
+    cursor: pointer;
+    margin-top: 0.8em;
+}
 

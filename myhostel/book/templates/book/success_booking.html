@@ -3,13 +3,22 @@
 
 {% block title %} booking {% endblock title %}
 
+{% block crumb %}
+    <li class="breadcrumb-item"><a href="{% url 'book:hostel' room.hostel.slug  %}">{{ room.hostel.name }}</a></li>
+    <li class="breadcrumb-item">{{ room.room_number}}</li>
+    <li class="breadcrumb-item">booked</li>
+{% endblock crumb %}
+
 {% block content %}
 
-<div class="container col-md-6">
-    <p class="alert alert-info">
+<!-- TODO: add a breadcrumb on success -->
+
+<div class="container col-md-6" style="height: 50vh;">
+    <div class="alert alert-info">
         <h2>Succesfully booked</h2>
-        Your room shall be retained.
-    </p>
+        <p class="lead">Your will be contacted by us and provided with information on how to retain your room.</p>
+        <span>Thank you for using myHostelKE</span>
+    </div>
 </div>
 
 

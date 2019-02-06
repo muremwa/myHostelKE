@@ -1,0 +1,16 @@
+.staff-actions {
+    margin: 1em;
+    width: 100%;
+}
+
+#wide {
+    height: 42.5vh;
+}
+
+
+.image-in input {
+    height: 100%;
+    width: 80%;
+    color: darkslategrey;
+    background-color: rgb(208, 221, 221);
+}

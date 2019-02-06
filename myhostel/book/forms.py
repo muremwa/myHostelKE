@@ -2,6 +2,8 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import ValidationError
 
+from .models import Hostel, Room
+
 import re
 
 
@@ -19,3 +21,19 @@ class BookRoomForm(forms.Form):
             raise ValidationError(_('Please start with \'07\''), code='wrong format')
 
         return data
+
+
+# hostel images
+class HostelImagesForm(forms.Form):
+    hostel_image = forms.ImageField()
+
+
+HostelImagesFormSet = forms.formset_factory(HostelImagesForm, extra=5)
+
+
+# hostel form
+class HostelForm(forms.ModelForm):
+
+    class Meta:
+        model = Hostel
+        exclude = ('slug', 'available_rooms', 'all_rooms')

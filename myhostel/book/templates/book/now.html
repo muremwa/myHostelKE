@@ -20,6 +20,13 @@
             <div class="alert alert-primary">
                 <p>please provide a name and phone number we could use to contact you</p>
             </div>
+
+            <div class="alert alert-info">
+                <h2>You are booking the room below</h2>
+                <p><a href="{{ room.get_absolute_url }}">{{ room.room_number}}</a> from <strong>{{ room.hostel}}</strong></p>
+
+                <p class="lead">Once you book you will be contacted by us and give more details on how to retain the room</p>
+            </div>
         </div>
         <div class="col-md-6">
             <form action="" method="post">

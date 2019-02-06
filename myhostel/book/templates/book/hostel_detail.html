@@ -36,7 +36,7 @@
             <div class="row">
                 {% for image in hostel.hostelimage_set.all %}
                     {% if not image.is_main %}
-                        <img data-toggle="tooltip" data-placement="top" title="click to enlarge" class="col-sm-4 small-images" src="{{ image.file.url }}" alt="">
+                        <img data-toggle="tooltip" data-placement="top" title="click to enlarge" class="col-sm-4 small-images over-js-img" src="{{ image.file.url }}" alt="">
                     {% endif %}
                 {% endfor %}
             </div>
@@ -78,7 +78,7 @@
                             <div class="row">
                                 <p class="col-sm-6">price:<br /> Ksh. {{room.price}} per month</p>
                                 <div class="col-sm-6 text-right">
-                                    <a href="{% url 'book:room' hostel.slug room.room_number %}"><img data-toggle="tooltip" data-placement="left" title="book this room at Ksh.{{ room.price }} monthly" style="height: 40%;" src="{% static 'svg/book.svg' %}" alt=""></a>
+                                    <a href="{% url 'book:now' hostel.slug room.room_number %}"><img data-toggle="tooltip" data-placement="left" title="book this room at Ksh.{{ room.price }} monthly" style="height: 40%;" src="{% static 'svg/book.svg' %}" alt=""></a>
                                 </div>
                             </div>
                         </div>
@@ -121,6 +121,8 @@
 
 
 </div>
+
+	{% include 'home/over_view.html' %}
 
 {% endblock content %}
 

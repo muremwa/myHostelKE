@@ -1,19 +1,27 @@
 from django.db import models
 from django.utils.text import slugify
+from django.urls import reverse
 
 
 # hostel compound
 class Hostel(models.Model):
-    name = models.CharField(max_length=400)
+    name = models.CharField(max_length=400, help_text='Preferred name of the premises')
     slug = models.SlugField(blank=True)
-    location = models.CharField(max_length=400)
-    institution = models.CharField(max_length=400)
-    available_rooms = models.IntegerField()
+    location = models.CharField(max_length=400, help_text='Where is it found')
+    institution = models.CharField(
+        max_length=400,
+        help_text='Always mention what Campus ie. Kisii University Main Campus'
+    )
+    available_rooms = models.IntegerField(default=0)
     all_rooms = models.IntegerField(blank=True, null=True)
-    distance_from_admin = models.IntegerField()
-    water = models.BooleanField(default=False)
-    electricity = models.BooleanField(default=False)
-    price_range = models.CharField(max_length=300, blank=True)
+    distance_from_admin = models.IntegerField(help_text='How far is it from the administration building')
+    water = models.BooleanField(default=False, help_text='Is there free water?')
+    electricity = models.BooleanField(default=False, help_text='Is there free power?')
+    price_range = models.CharField(
+        max_length=300,
+        blank=True,
+        help_text='Enter price range in the following format \'KSH 4500 - KSH 6000\''
+    )
     objects = models.Manager()
 
     class Meta:
@@ -28,6 +36,9 @@ class Hostel(models.Model):
 
     def get_main_image(self):
         return self.hostelimage_set.filter(is_main=True)[0]
+
+    def get_absolute_url(self):
+        return reverse('book:hostel', args=[str(self.slug)])
 
 
 # rooms
@@ -70,6 +81,9 @@ class Room(models.Model):
         elif type_ == self.house_types[3][0]:
             return self.house_types[3][-1]
 
+    def get_absolute_url(self):
+        return reverse('book:room', kwargs={'slug': str(self.hostel.slug), 'room_number':str(self.room_number)})
+
 
 class RoomImage(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
@@ -84,6 +98,7 @@ class HostelImage(models.Model):
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
     file = models.ImageField(upload_to='hostel/')
     is_main = models.BooleanField(default=False)
+    objects = models.Manager()
 
     def __str__(self):
         return 'For {}'.format(self.hostel)
@@ -102,6 +117,4 @@ class Booking(models.Model):
     def delete(self, using=None, keep_parents=False):
         self.room.available = True
         self.room.save()
-        self.room.hostel.available_rooms += 1
-        self.room.hostel.save()
         return super().delete()
