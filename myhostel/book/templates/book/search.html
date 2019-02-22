@@ -1,0 +1,148 @@
+{% extends "home/base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}"{{ query }}" search results{% endblock title %}
+{% block style %}<link rel="stylesheet" type="text/css" href="{% static 'book/css/search.css' %}">{% endblock style %}
+
+{% block crumb %}
+<li class="breadcrumb-item">Search</li>
+{% endblock crumb %}
+
+{% block content %}
+
+<div class="container">
+    {% if results %}
+        <div class="top text-center">
+            <h2>Showing results for "{{ query }}"</h2>
+        </div>
+
+        <div class="results container col-md-8">
+            {% if advanced %}
+                {% if advanced_field == 'house_type' %}
+                    <h2 class="text-center">Hostels with "{{ advanced_lookup }}" rooms</h2>
+                    {% comment %} House type search {% endcomment %}
+                    {% for result, value in results.items %}
+                        <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image.file.url}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
+                            <a href="{% url 'book:hostel' result.slug %}">
+                                <div class="result-name text-center">
+                                    <h3>{{ result.name }} <br /><small><strong>{{ value }} {{ advanced_lookup }}</strong> rooms available</small></h3>
+                                    <hr>
+                                </div>                                
+
+                                <div class="more-result-info">
+                                    <div class="row">
+                                        <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/school.svg' %}" alt=""> {{ result.institution }}</span></div>
+                                        <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/place.svg' %}" alt=""> {{result.location}}</span></div>
+                                        <div class="col-sm-4 text-center"><span>{{ result.price_range}}</span></div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+
+                    {% if advanced_field == 'institution' %}
+                        <h2 class="text-center">Institution closest to "{{ advanced_lookup }}"</h2>
+                        {% comment %} institution search {% endcomment %}
+                        {% for result in results %}
+                            <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image.file.url}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
+                                <a href="{% url 'book:hostel' result.slug %}">
+                                    <div class="result-name text-center">
+                                        <h3><strong>{{ result.name }}</strong><br/><small>at</small><br/>{{result.institution}}</h3>
+                                        <hr>
+                                    </div>
+
+                                    <div class="more-result-info">
+                                        <div class="row">
+                                            <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/place.svg' %}" alt="place ico"> {{ result.location }}</span></div>
+                                            <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/bed.svg' %}" alt=""> {% if result.available_rooms == 0 %}No{% else %}{{ result.available_rooms}} {% endif %} rooms available </span></div>
+                                            <div class="col-sm-4 text-center"><span>{{ result.price_range}}</span></div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+
+                        {% if advanced_field == 'location' %}
+                            <h2 class="text-center">Hostel located at "{{ advanced_lookup }}"</h2>
+                            {% comment %} Location search {% endcomment %}
+                            {% for result in results %}
+                                <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image.file.url}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
+                                    <a href="{% url 'book:hostel' result.slug %}">
+                                        <div class="result-name text-center">
+                                            <h3><strong>{{ result.name }}</strong><br/><small><img style="height: 20px;" class="locate-pin-hostel" src="{% static 'svg/place.svg' %}" alt="place ico"><br/>{{ result.location }}</small></h3>
+                                            <hr>
+                                        </div>
+
+                                        <div class="more-result-info">
+                                            <div class="row">
+                                                <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/school.svg' %}" alt="place ico"> {{ result.institution }}</span></div>
+                                                <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/bed.svg' %}" alt=""> {% if result.available_rooms == 0 %}No{% else %}{{ result.available_rooms}} {% endif %} rooms available </span></div>
+                                                <div class="col-sm-4 text-center"><span>{{ result.price_range}}</span></div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            {% if advanced_field == 'price' %}
+                                <h2 class="text-center">Hostels priced {{ advanced_lookup }}</h2>
+                                {% comment %} Location search {% endcomment %}
+                                {% for result in results %}
+                                    <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image.file.url}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
+                                        <a href="{% url 'book:hostel' result.slug %}">
+                                            <div class="result-name text-center">
+                                                <h3><strong>{{ result.name }}</strong><br/><small><br/>{{ result.price_range}}</small></h3>
+                                                <hr>
+                                            </div>
+
+                                            <div class="more-result-info">
+                                                <div class="row">
+                                                    <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/school.svg' %}" alt="place ico"> {{ result.institution }}</span></div>
+                                                    <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/bed.svg' %}" alt=""> {% if result.available_rooms == 0 %}No{% else %}{{ result.available_rooms}} {% endif %} rooms available </span></div>
+                                                    <div class="col-sm-4 text-center"><span><img style="height: 20px;" class="locate-pin-hostel" src="{% static 'svg/place.svg' %}" alt="place ico"> {{ result.location }}</span></div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+
+                        {% endif %}
+
+                    {% endif %}
+
+                {% endif %}
+            
+            {% else %}
+                {% for result in results %}
+                    <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image.file.url}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
+                        <a href="{% url 'book:hostel' result.slug %}">
+                            <div class="result-name text-center">
+                                <h3>{{ result.name }}</strong><br/><small><img class="locate-pin-hostel" src="{% static 'svg/place.svg' %}" alt=""> {{result.location}}</small></h3>
+                                <hr>
+                            </div>
+                            <div class="more-result-info">
+                                <div class="row">
+                                    <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/school.svg' %}" alt=""> {{ result.institution }}</span></div>
+                                    <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/bed.svg' %}" alt=""> {% if result.available_rooms == 0 %}No{% else %}{{ result.available_rooms}} {% endif %} rooms available </span></div>
+                                    <div class="col-sm-4 text-center"><span>KSH {{ result.price_range}}</span></div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% else %}
+        <h1 class="text-center">No results for "{{ query }}"</h1>
+
+        <div class="container col-sm-6 text-center">
+            <p class="lead">Try specifying your institution eg "Kisii University Main campus"</p>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock content %}

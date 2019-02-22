@@ -22,6 +22,7 @@ class Hostel(models.Model):
         blank=True,
         help_text='Enter price range in the following format \'KSH 4500 - KSH 6000\''
     )
+    views = models.IntegerField(default=0)
     objects = models.Manager()
 
     class Meta:
@@ -39,6 +40,14 @@ class Hostel(models.Model):
 
     def get_absolute_url(self):
         return reverse('book:hostel', args=[str(self.slug)])
+
+    def get_prices(self):
+        res = str(self.price_range).split(" ")
+        res_ = []
+        for item in res:
+            if item.isdigit():
+                res_.append(item)
+        return res_
 
 
 # rooms
@@ -87,8 +96,8 @@ class Room(models.Model):
 
 class RoomImage(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    file = models.ImageField(upload_to='rooms/')
-    is_main = models.BooleanField(default=False)
+    file = models.ImageField(upload_to='rooms/', help_text="PLEASE CROP TO 16:9")
+    is_main = models.BooleanField(default=False, help_text="PLEASE MARK ONE AS MAIN!!!!")
 
     def __str__(self):
         return 'For {}'.format(self.room)
@@ -96,8 +105,8 @@ class RoomImage(models.Model):
 
 class HostelImage(models.Model):
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
-    file = models.ImageField(upload_to='hostel/')
-    is_main = models.BooleanField(default=False)
+    file = models.ImageField(upload_to='hostel/', help_text="PLEASE CROP TO 16:9")
+    is_main = models.BooleanField(default=False, help_text="PLEASE MARK ONE AS MAIN!!!!")
     objects = models.Manager()
 
     def __str__(self):
@@ -109,7 +118,12 @@ class Booking(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, help_text='Enter your preferred name')
     phone_number = models.CharField(max_length=10, help_text='Enter phone number')
+    cleared = models.BooleanField(default=False)
+    date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     objects = models.Manager()
+
+    class Meta:
+        ordering = ['-date']
 
     def __str__(self):
         return 'order by {} for {}'.format(self.name, self.room)
@@ -118,3 +132,11 @@ class Booking(models.Model):
         self.room.available = True
         self.room.save()
         return super().delete()
+
+
+class PopularSearches(models.Model):
+    term = models.TextField()
+    count = models.IntegerField(default=0)
+
+    def __str__(self):
+        return "{} searched {} times".format(self.term, self.count)

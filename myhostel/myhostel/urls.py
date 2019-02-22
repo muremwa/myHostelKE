@@ -17,11 +17,17 @@ urlpatterns = [
     # book/
     path('book/', include('book.urls')),
 
-    # staff-action/add-hostel
-    path('staff-actions/', book_views.StaffActions.as_view(),name='staff'),
+    # staff-action/add-hostel/
+    path('staff-actions/', book_views.StaffActions.as_view(), name='staff'),
 
-    # staff-action/add-hostel
-    path('staff-actions/add-hostel/', book_views.StaffAddHostel.as_view(),name='add-hostel'),
+    # staff-action/add-hostel/
+    path('staff-actions/add-hostel/', book_views.StaffAddHostel.as_view(), name='add-hostel'),
+
+    # staff-actions/bookings/
+    path('staff-actions/bookings/', book_views.BookingList.as_view(), name='booking-list'),
+
+    # staff-actions/booking/4/
+    path('staff-actions/bookings/<int:pk>/', book_views.BookingDetail.as_view(), name="booking"),
 
 ]
 

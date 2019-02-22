@@ -47,7 +47,7 @@
                     <li>{% if hostel.water %}Free water available{% else %}No free water{% endif %}</li>
                     <li>{% if hostel.electricity %}Free electricity available{% else %}No free electricity{% endif %}</li>
                     <li>{{ hostel.name }} is {{ hostel.distance_from_admin }} meters from the admnistartion block.</li>
-                    <li>Prices range from Ksh.{{ hostel.price_range}}</li>
+                    <li>Prices range from {{ hostel.price_range}}</li>
                     {% if hostel.available_rooms %}
                         <li>{{ hostel.available_rooms }} room(s) are available</li>
                     {% else %}
@@ -76,7 +76,7 @@
                         <div class="card-body">
                             <h4 class="card-text">{{ room.get_house_type }}</h4>
                             <div class="row">
-                                <p class="col-sm-6">price:<br /> Ksh. {{room.price}} per month</p>
+                                <p class="col-sm-6">price:<br />{{room.price}} per month</p>
                                 <div class="col-sm-6 text-right">
                                     <a href="{% url 'book:now' hostel.slug room.room_number %}"><img data-toggle="tooltip" data-placement="left" title="book this room at Ksh.{{ room.price }} monthly" style="height: 40%;" src="{% static 'svg/book.svg' %}" alt=""></a>
                                 </div>

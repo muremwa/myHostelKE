@@ -16,4 +16,7 @@ urlpatterns = [
 
     # book/kinder/34/now/
     path('hostel/<slug:slug>/<room_number>/now/', views.RoomBooking.as_view(), name='now'),
+
+    # book/search/
+    path('search/', views.Search.as_view(), name='search'),
 ]

@@ -1,0 +1,31 @@
+.result {
+    transition: 0.4s;
+    margin: 2em;
+    padding: 0.3em;
+    background: #ffc0cb;
+    border-radius: 2px;
+}
+
+.result * {
+    color: rgb(87, 102, 102);
+}
+
+.result a:hover {
+    text-decoration: none;
+}
+
+.more-result-info {
+    width: 100%;
+}
+
+.more-result-info span {
+    color: rgb(99, 107, 107);
+}
+
+.more-result-info .row {
+    margin-left: 4em;
+}
+
+.locate-pin-hostel {
+    height: 2.3em;
+}

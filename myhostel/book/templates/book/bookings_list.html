@@ -1,0 +1,52 @@
+{% extends "home/base.html" %}
+{% load staticfiles %}
+
+{% block title %}Bookings{% endblock title %}
+
+{% block style %}<link rel="stylesheet" type="text/css" href="{% static 'book/css/booking.css' %}">{% endblock style %}
+
+{% block crumb %}
+<li class="breadcrumb-item"><a href="{% url 'staff' %}">Staff Actions</a></li>
+<li class="breadcrumb-item">bookings</li>
+{% endblock crumb %}
+
+{% block content %}
+
+    <div class="container col-md-6">
+
+        <h2>All bookings</h2>
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-6 scheme">
+                <div style="height: 100%" class="row">
+                    <div class="color" style="background-color: rgb(248, 248, 248);"></div>
+                    <span>Cleared</span>
+                </div>
+            </div>
+            <div class="col-sm-6 scheme">
+                <div style="height: 100%" class="row">
+                    <div class="color" style="background-color: #ffc0cb;"></div>
+                    <span>Uncleared</span>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <div class="col-md-10">
+            {% for booking in bookings %}
+                <div class="booking" style="background-color: {% if booking.cleared %}rgb(248, 248, 248){% else %}#ffc0cb{% endif %};">
+                    <a href="{% url 'booking' booking.pk %}">
+                        <h2 class="display-4">{{ booking.name }} booked {{ booking.room }}</h2>
+                        <div class="text-center">
+                            <span>{{ booking.date }}</span>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        
+        
+    </div>
+
+{% endblock content %}

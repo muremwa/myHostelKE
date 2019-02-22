@@ -4,6 +4,7 @@
 <head>
     <title>myHostelKenya | {% block title %}home{% endblock title %}</title>
     <link rel='stylesheet' type="text/css" href="http://127.0.0.1/assets/css/bootstrap.min.css">
+    {% comment %} <link rel='stylesheet' type="text/css" href="{% static 'css/bootstrap.min.css' %}"> {% endcomment %}
     <link rel='stylesheet' type="text/css" href="{% static 'css/base.css' %}">
     {% block style %}{% endblock style %}
 </head>
@@ -29,8 +30,8 @@
                     </li>
                     {% endif %}
                 </ul>
-              <form method="GET" action="" class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-4" type="search" name="query" value="" placeholder="Search for hostels" aria-label="Search">
+              <form method="GET" action="{% url 'book:search' %}" class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-4" type="search" name="query" value="{{ query }}" placeholder="Search for hostels" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
               </form>
 
