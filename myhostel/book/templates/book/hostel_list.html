@@ -39,29 +39,28 @@
                         <hr>
                         <ul>
                             {% for pop in popular %}
-                                <li class="popular-item"><a href="{{pop.get_abolute_url}}">{{pop.name}}</a></li>
+                                <li class="popular-item"><a href="{{ pop.get_absolute_url }}">{{pop.name}}</a></li>
                             {% endfor %}
                         </ul>
                     </div>
                 </div>
             {% endif %}
 
-            <!-- Recent searches -->
-            <div class="card side-cards">
-                <img src="{% static 'css/images/hk.png' %}" alt="" class="card-img-top">
-                <div class="card-body">
-                    <span class="card-title text-center">your recent searches</span>
-                    <hr>
-                    <ul>
-                        {% if recent_searches %}
+            {% if recent_searches %}
+                <!-- Recent searches -->
+                <div class="card side-cards">
+                    <img src="{% static 'css/images/hk.png' %}" alt="" class="card-img-top">
+                    <div class="card-body">
+                        <span class="card-title text-center">your recent searches</span>
+                        <hr>
+                        <ul>
                             {% for search in recent_searches %}
                                 <li class="recent-item"><a href="{% url 'book:search' %}?query={{search}}">"{{ search }}"</a></li>
                             {% endfor %}
-                        {% else %}
-                        {% endif %}
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
 
             <!-- Filters -->
             <div class="card side-cards">

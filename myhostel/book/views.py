@@ -16,6 +16,7 @@ class Index(generic.ListView):
     context_object_name = 'hostels'
 
     def popular_hostels(self):
+        # gets all popular hostels according to views it has gathered
         try:
             pops = self.model.objects.order_by('-views').filter(views__gt=0)[:4]
         except:
@@ -29,7 +30,8 @@ class Index(generic.ListView):
         except KeyError:
             self.request.session['recent_searches'] = []
             recent = self.request.session['recent_searches'][-5:]
-        context['recent_searches'] = reversed(recent)
+
+        context['recent_searches'] = list(reversed(recent))
         context['popular'] = self.popular_hostels()
         return context
 
@@ -42,8 +44,10 @@ class HostelDetail(generic.DetailView):
     @staticmethod
     def hostel_suggestions(hostel):
         suggestions = Hostel.objects.filter(
+            # suggest hostels from same school
             institution__icontains=hostel.institution
         ).filter(
+            # all to have available rooms
             available_rooms__gt=0
         ).exclude(
             id=hostel.id
@@ -53,6 +57,8 @@ class HostelDetail(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['hostel_suggestions'] = self.hostel_suggestions(context['hostel'])
+
+        # add a view to the hostel using sessions
         try:
             seen = self.request.session['hostels_seen']
         except KeyError:
@@ -64,6 +70,7 @@ class HostelDetail(generic.DetailView):
             context['hostel'].views+=1
             self.request.session['seen'] = seen
         context['hostel'].save()
+
         return context
 
 
@@ -71,6 +78,7 @@ class RoomDetail(View):
     def get(self, request, *args, **kwargs):
         room = get_object_or_404(Room, room_number=kwargs['room_number'])
 
+        # if room is booked it will return a 404 error
         if room.available:
             return render(request, 'book/room_detail.html', {
                 'room': room
@@ -103,6 +111,7 @@ class RoomBooking(View):
             number = form.cleaned_data['phone_number']
 
             if room.available:
+                # create a booking instance
                 Booking.objects.create(
                     room=room,
                     name=name,
@@ -129,6 +138,7 @@ class StaffActions(generic.TemplateView):
     template_name = 'book/staff.html'
 
     def get(self, request, *args, **kwargs):
+        # non staff users are get a 404 error by this page
         if not self.request.user:
             raise Http404
         elif not self.request.user.is_staff:
@@ -155,8 +165,8 @@ class StaffAddHostel(View):
             })
 
     def save_hostel_images(self, hostel, images):
+        # save images for a hostel
         for k, img in enumerate(images):
-            image = img
 
             # the first is the main image
             if k == 0:
@@ -166,7 +176,7 @@ class StaffAddHostel(View):
 
             HostelImage.objects.create(
                 hostel=hostel,
-                file=image,
+                file=img,
                 is_main=main
             )
 
@@ -177,11 +187,13 @@ class StaffAddHostel(View):
 
         if hostel_form.is_valid():
             for i in range(5):
+                # dump all images into a list that is sent to the image saving method
                 try:
                     images.append(self.request.FILES['form-{}-hostel_image'.format(i)])
                 except MultiValueDictKeyError:
                     break
 
+            # always have an image for the hostel
             if not any(images):
                 messages.add_message(self.request, messages.WARNING, 'Please add at least one image')
                 return render(self.request, self.template, {
@@ -236,39 +248,47 @@ class Search(generic.TemplateView):
     template_name = 'book/search.html'
 
     def basic_search(self, query):
+        # search in the name, school and location fields
         q_set = (
                 Q(name__icontains=query) |
                 Q(institution__icontains=query) |
                 Q(location__icontains=query)
         )
-        return Hostel.objects.filter(q_set)
+        return Hostel.objects.filter(q_set).order_by('-available_rooms')
 
     def price_search(self, range_of_price):
-        hos = Hostel.objects.filter(available_rooms__gt=0).order_by('-available_rooms')
+        # split the query term eg '4000-8000' as [4000, 8000] and search the price range of the hostels that
+        # have price ranges between the two. Hostel class has a method to split its price range
+        hostels = Hostel.objects.filter(available_rooms__gt=0).order_by('-available_rooms')
         res = []
         from_ = range_of_price.split("-")[0]
         to_ = range_of_price.split("-")[-1]
 
-        for h in hos:
-            r = h.get_prices()
+        for hostel in hostels:
+            r = hostel.get_prices()
             if from_ >= r[0] and to_ <= r[-1]:
-                res.append(h)
+                res.append(hostel)
 
         return res
 
     def house_type_search(self, look):
-        hos = Hostel.objects.filter(available_rooms__gt=0)
+        hostels = Hostel.objects.filter(available_rooms__gt=0)
         res = {}
 
-        for h in hos:
+        for hostel in hostels:
+            # increment this for each of "the room type" the hostel has.
             count_of_look = 0
-            for room in h.room_set.all():
+            for room in hostel.room_set.all():
                 if room.house_type == look:
                     count_of_look+=1
-            if count_of_look:
-                res[h] = count_of_look
 
+            # if a hostel has none of "the room type" it's not added
+            if count_of_look:
+                res[hostel] = count_of_look
+
+        # sort the hostels according to the number of "the room type" each has
         res = dict(reversed(sorted(res.items(), key=lambda kv: kv[1])))
+
         return res
 
     def advanced_search(self, query):
@@ -287,33 +307,44 @@ class Search(generic.TemplateView):
         bed_sitter = ["BS", "BEDSITTER"]
 
         if field in price:
+            # price searches
             term = 'price'
             results = self.price_search(look_up)
+
         elif field in institution:
+            # school search
             term = 'institution'
             results = Hostel.objects.filter(institution__icontains=look_up).order_by('-available_rooms')
+
         elif field in location:
+            # location search
             term = 'location'
             results = Hostel.objects.filter(location__icontains=look_up).order_by('-available_rooms')
+
         elif field in house_types:
+            # house types
             look_up = look_up.upper()
             term = 'house_type'
+
             if look_up in one_room:
                 look_up = "One Bedroom"
                 results = self.house_type_search('1B')
+
             elif look_up in two_bedroom:
                 look_up = "Two Bedroom"
                 results = self.house_type_search('2B')
+
             elif look_up in bed_sitter:
                 look_up = "Bedsitter"
                 results = self.house_type_search('BS')
+
             elif look_up.upper() == "SINGLE" or look_up == "SINGLE ROOM":
                 look_up = "Single Room"
                 results = self.house_type_search('SR')
-            else:
-                results = self.basic_search(look_up)
 
-        print(results)
+            else:
+                # if none defaults to basic search
+                results = self.basic_search(look_up)
 
         return {'results': results, 'term': term, 'look_up': look_up}
 
@@ -323,12 +354,14 @@ class Search(generic.TemplateView):
         ad_search_term = None
         ad_search_term_l = None
 
+        # retrieve previous searches
         try:
             recent = self.request.session['recent_searches']
         except KeyError:
             self.request.session['recent_searches'] = []
             recent = self.request.session['recent_searches']
 
+        # check if the search is advanced
         if re.search(r'\w+:\w+', query):
             if len(query.split(':')) == 2:
                 ad_search = True
@@ -341,6 +374,7 @@ class Search(generic.TemplateView):
         else:
             results = self.basic_search(query)
 
+        # if the search has results it is added to session searches
         if results:
             if query in recent:
                 recent.remove(query)
