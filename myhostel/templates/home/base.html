@@ -32,7 +32,7 @@
                       <a class="nav-link" href="{% url 'admin:index' %}" target="_blank">admin page</a>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link" href="{% url 'staff' %}">staff</a>
+                      <a class="nav-link {% block staff %}{% endblock staff %}"" href="{% url 'staff' %}">staff</a>
                   </li>
                   {% endif %}
               {% endif %}

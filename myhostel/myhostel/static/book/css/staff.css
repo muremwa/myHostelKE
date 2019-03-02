@@ -14,3 +14,7 @@
     color: darkslategrey;
     background-color: rgb(208, 221, 221);
 }
+
+body {
+    background: none;
+}
