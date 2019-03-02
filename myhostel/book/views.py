@@ -22,10 +22,15 @@ class Index(generic.ListView):
     def get_queryset(self):
         try:
             school = self.request.session['school']
-            query_set = Hostel.objects.filter(institution=school)
         except KeyError:
+            self.request.session['school'] = None
+            school = self.request.session['school']
+
+        if school:
+            query_set = Hostel.objects.filter(institution=school)
+        else:
             query_set = Hostel.objects.all()
-        return query_set
+        return query_set.order_by('-available_rooms')
 
     def popular_hostels(self):
         # gets all popular hostels according to views it has gathered
