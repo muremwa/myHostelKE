@@ -3,11 +3,11 @@ $(function () {
 });
 
 
-window.images = document.getElementsByClassName('small-images');
 // overview
 var b = document.getElementsByTagName('body')[0];
 var over = document.querySelector(".over-view");
 var overImg = document.querySelector('#over-view-image');
+var mainImg = document.querySelector("#big-image");
 var ima;
 var pos;
 var maxI;
@@ -19,19 +19,33 @@ $(document).on('click', '.close-js-over', function () {
     b.style.overflow = "scroll";
 })
 
-$(document).on('click', '.over-js-img', function () {
+function changeBigImage (i) {
+    var path = mainImg.src;
+    mainImg.src = i.src;
+    i.src = path;
+}
+
+function enlargeImages (i) {
     document.getElementsByTagName('nav')[0].scrollIntoView();
     b.style.height = '100vh';
     b.style.overflow = 'hidden';
     di = document.querySelector('.danger-image');
     ima = allImages();
     for (image in ima) {
-        if (this.src == ima[image]) {
+        if (i.src == ima[image]) {
             pos = ima.indexOf(ima[image]);
         }
     }
-    overImg.src = this.src;
+    overImg.src = i.src;
     over.style.display = "";
+}
+
+$(document).on('click', '.over-js-img', function () {
+    if (window.innerWidth < 700) {
+        changeBigImage(this);
+    } else {
+        enlargeImages(this);
+    }
 })
 
 function allImages () {

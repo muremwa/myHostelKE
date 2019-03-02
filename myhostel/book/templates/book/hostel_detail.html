@@ -10,7 +10,10 @@
 
 {% block home %}active{% endblock home %}
 
-{% block crumb %}<li class="breadcrumb-item active">{{ hostel.name }}</li>{% endblock crumb %}
+{% block crumb %}
+<li class="breadcrumb-item"><a href="{% url 'book:index' %}">hostels</a></li>
+<li class="breadcrumb-item active">{{ hostel.name }}</li>
+{% endblock crumb %}
 
 {% block content %}
 
@@ -33,10 +36,12 @@
             <h2 class="text-center">more images for {{ hostel.name }}</h2>
             <hr>
 
-            <div class="row">
+            <div class="row" id="small-row">
                 {% for image in hostel.hostelimage_set.all %}
                     {% if not image.is_main %}
-                        <img data-toggle="tooltip" data-placement="top" title="click to enlarge" class="col-sm-4 small-images over-js-img" src="{{ image.file.url }}" alt="">
+                        <div class="col-md-4">
+                            <img data-toggle="tooltip" data-placement="top" title="click to enlarge" src="{{ image.file.url }}" alt="" class="other-hostel-images small-images over-js-img">
+                        </div>                    
                     {% endif %}
                 {% endfor %}
             </div>
@@ -74,11 +79,11 @@
                     <div class="card room">
                         <a href="{% url 'book:room' hostel.slug room.room_number %}"><img src="{{ room.get_main_image.file.url }}" alt="image of a room" class="card-img-top"></a>
                         <div class="card-body">
-                            <h4 class="card-text">{{ room.get_house_type }}</h4>
+                            <h4 class="card-text room-type">{{ room.get_house_type }}</h4>
                             <div class="row">
-                                <p class="col-sm-6">price:<br />{{room.price}} per month</p>
-                                <div class="col-sm-6 text-right">
-                                    <a href="{% url 'book:now' hostel.slug room.room_number %}"><img data-toggle="tooltip" data-placement="left" title="book this room at Ksh.{{ room.price }} monthly" style="height: 40%;" src="{% static 'svg/book.svg' %}" alt=""></a>
+                                <p class="col-sm-8">Ksh.{{room.price}} per month</p>
+                                <div class="col-sm-4">
+                                    <a class="book-ico" href="{% url 'book:now' hostel.slug room.room_number %}"><img data-toggle="tooltip" data-placement="left" title="book this room at Ksh.{{ room.price }} monthly" style="height: 40%;" src="{% static 'svg/book.svg' %}" alt=""></a>
                                 </div>
                             </div>
                         </div>

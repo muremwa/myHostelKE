@@ -2,86 +2,100 @@
 {% load staticfiles %}
 <html>
 <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#343a40">
     <title>myHostelKenya | {% block title %}home{% endblock title %}</title>
-    <link rel='stylesheet' type="text/css" href="http://127.0.0.1/assets/css/bootstrap.min.css">
-    {% comment %} <link rel='stylesheet' type="text/css" href="{% static 'css/bootstrap.min.css' %}"> {% endcomment %}
+    <!-- <link rel='stylesheet' type="text/css" href="http://127.0.0.1/assets/css/bootstrap.min.css"> -->
+    <link rel='stylesheet' type="text/css" href="{% static 'css/bootstrap.min.css' %}">
     <link rel='stylesheet' type="text/css" href="{% static 'css/base.css' %}">
     {% block style %}{% endblock style %}
 </head>
 <body>
-        <nav id="navbar" class="navbar navbar-expand-lg" style="background-color: pink;">
-            <a id="brand-title" class="navbar-brand" href="{% url 'book:index' %}">myHostelKenya</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-              
+        <nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <h1>myHostelKenya</h1>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link {% block home %}{% endblock home %}" href="\">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% block book %}{% endblock book %}" href="{% url 'book:index' %}">book</a>
+              </li>
+              {% if user.is_authenticated %}
+                  {% if user.is_staff %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'admin:index' %}" target="_blank">admin page</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'staff' %}">staff</a>
+                  </li>
+                  {% endif %}
+              {% endif %}
+              <li class="nav-item">
+                <a class="nav-link {% block bug %}{% endblock bug %}" href="">bug</a>
+              </li>
+            </ul>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item {% block home %}{% endblock %}">
-                        <a class="nav-link" href="{% url 'book:index' %}">Home</a>
-                    </li>
-                    <li class="nav-item {% block book %}{% endblock %}">
-                        <a class="nav-link" href="">book now</a>
-                    </li>
-                    {% if user.is_staff %}
-                    <li class="nav-item {% block staff %}{% endblock %}">
-                        <a class="nav-link" href="{% url 'staff' %}">Staff</a>
-                    </li>
-                    {% endif %}
-                </ul>
-              <form method="GET" action="{% url 'book:search' %}" class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-4" type="search" name="query" value="{{ query }}" placeholder="Search for hostels" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-              </form>
+            <form id="top-search-bar" method="GET" action="{% url 'book:search' %}" class="form-inline my-2 my-lg-0">
+              <input class="form-control mr-sm-4" type="search" name="query" value="{{ query }}" placeholder="Search for hostels" aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+          </div>
+      </nav>
 
-        </nav>
-        <nav aria-label="breadcrumb">
-          <ol style="padding-left: 20%;"  class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'book:index'  %}">Home</a></li>
-            {% block crumb %}{% endblock crumb %}
-          </ol>
-        </nav>
-        {% if messages %}
-        <div class="message-div text-center">
-            <ul class="messages">
-              {% for message in messages %}
-                <li {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>{{ message }} </li>
-              {% endfor %}
-            </ul>          
+
+
+        <div class="top">
+          <nav aria-label="breadcrumb">
+            <ol style="padding-left: 20%;" class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
+              {% block crumb %}{% endblock crumb %}
+            </ol>
+          </nav>
+
+          {% if messages %}
+          <div class="message-div text-center">
+              <ul class="messages">
+                {% for message in messages %}
+                  <li {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>{{ message }} </li>
+                {% endfor %}
+              </ul>          
+          </div>
+          {% endif %}
         </div>
-        {% endif %}
-
+      
+    <div class="main">
     {% block content %}
     
     {% endblock content %}
-		
-		
+    </div>
+    
 
 
-<footer class="section footer-classic context-dark bg-image" style="background: pink;color: black;">
+<footer class="section footer-classic context-dark bg-image" style="background: #343a40;">
         <div class="container">
           <div class="row row-30">
             <div class="col-md-4 col-xl-5">
-              <div class="pr-xl-4"><a class="brand" href=""><img class="brand-logo-light" src="images/agency/logo-inverse-140x37.png" alt="" width="140" height="37" srcset="images/agency/logo-retina-inverse-280x74.png 2x"></a>
-                <p>We are an award-winning creative agency, dedicated to the best result in web design, promotion, business consulting, and marketing.</p>
+              <div class="pr-xl-4"><a class="brand" href=""><h7>myHostelKenya</h7></a>
+                <p>Search for private hostels in your Kenyan institution of choice. From Kisii University to the University of Nairobi.</p>
                 <!-- Rights-->
-                <p class="rights"><span>©  </span><span class="copyright-year">2018</span><span> </span><span>Waves</span><span>. </span><span>All Rights Reserved.</span></p>
+                <p class="rights"><span>©  </span><span class="copyright-year">2019. </span><span>All Rights Reserved.</span></p>
               </div>
             </div>
             <div class="col-md-4">
               <h5>Contacts</h5>
               <dl class="contact-list">
-                <dt>Address:</dt>
-                <dd style="color: black;">798 South Park Avenue, Jaipur, Raj</dd>
-              </dl>
-              <dl class="contact-list">
                 <dt>email:</dt>
-                <dd><a style="color: black;" href="mailto:#">dkstudioin@gmail.com</a></dd>
+                <dd><a style="color: black;" href="mailto:#">help@myhostelkenya.com</a></dd>
               </dl>
               <dl class="contact-list">
                 <dt>phones:</dt>
-                <dd><a style="color: black;" href="tel:#">+91 7568543012</a> <span>or</span> <a style="color: black;" href="tel:#">+91 9571195353</a>
+                <dd><a style="color: black;" href="tel:#">+254 792199276</a>
                 </dd>
               </dl>
             </div>
@@ -89,8 +103,8 @@
               <h5>Links</h5>
               <ul class="nav-list">
                 <li><a style="color: black;" href="#">About</a></li>
-                <li><a style="color: black;" href="#">Projects</a></li>
-                <li><a style="color: black;" href="#">Contacts</a></li>
+                <li><a style="color: black;" href="#">Bug report</a></li>
+                <li><a style="color: black;" href="#">How to use this site</a></li>
               </ul>
             </div>
           </div>

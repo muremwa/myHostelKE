@@ -3,9 +3,8 @@
 
 {% block title %}book {{ room }}{% endblock title %}
 
-{% block style %}{% endblock style %}
-
 {% block crumb %}
+<li class="breadcrumb-item"><a href="{% url 'book:index' %}">hostels</a></li>
 <li class="breadcrumb-item"><a href="{% url 'book:hostel' room.hostel.slug  %}">{{ room.hostel.name }}</a></li>
 <li class="breadcrumb-item"><a href="{% url 'book:room' room.hostel.slug room.room_number %}">{{ room.room_number}}</a></li>
 <li class="breadcrumb-item">book now</li>
@@ -13,6 +12,12 @@
 
 
 {% block content %}
+
+<style>
+    body {
+        background: none;
+    }
+</style>
 
 <div class="container">
     <div class="row">
