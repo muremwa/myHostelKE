@@ -10,6 +10,7 @@ from .forms import BookRoomForm, HostelForm, HostelImagesFormSet
 
 import re
 
+
 class Home(generic.TemplateView):
     template_name = "home/home.html"
 
@@ -18,13 +19,17 @@ class Index(generic.ListView):
     model = Hostel
     context_object_name = 'hostels'
 
+    def get_queryset(self):
+        try:
+            school = self.request.session['school']
+            query_set = Hostel.objects.filter(institution=school)
+        except KeyError:
+            query_set = Hostel.objects.all()
+        return query_set
+
     def popular_hostels(self):
         # gets all popular hostels according to views it has gathered
-        try:
-            pops = self.model.objects.order_by('-views').filter(views__gt=0)[:4]
-        except:
-            pops = []
-        return pops
+        return self.model.objects.order_by('-views').filter(views__gt=0)[:4]
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
@@ -70,7 +75,7 @@ class HostelDetail(generic.DetailView):
 
         if context['hostel'].pk not in seen:
             seen.append(context['hostel'].pk)
-            context['hostel'].views+=1
+            context['hostel'].views += 1
             self.request.session['seen'] = seen
         context['hostel'].save()
 
@@ -78,7 +83,8 @@ class HostelDetail(generic.DetailView):
 
 
 class RoomDetail(View):
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request, *args, **kwargs):
         room = get_object_or_404(Room, room_number=kwargs['room_number'])
 
         # if room is booked it will return a 404 error
@@ -167,7 +173,8 @@ class StaffAddHostel(View):
                 'images_form': self.images_form_set
             })
 
-    def save_hostel_images(self, hostel, images):
+    @staticmethod
+    def save_hostel_images(hostel, images):
         # save images for a hostel
         for k, img in enumerate(images):
 
@@ -236,7 +243,8 @@ class BookingDetail(generic.DetailView):
         else:
             return super().get(request, args, kwargs)
 
-    def post(self, request, *args, **kwargs):
+    @staticmethod
+    def post(request, *args, **kwargs):
         if not request.user.is_staff:
             raise Http404
         else:
@@ -250,19 +258,28 @@ class BookingDetail(generic.DetailView):
 class Search(generic.TemplateView):
     template_name = 'book/search.html'
 
-    def basic_search(self, query):
+    @staticmethod
+    def basic_search(query, school):
         # search in the name, school and location fields
         q_set = (
                 Q(name__icontains=query) |
                 Q(institution__icontains=query) |
                 Q(location__icontains=query)
         )
-        return Hostel.objects.filter(q_set).order_by('-available_rooms')
+        results = Hostel.objects.filter(q_set)
+        print(school)
+        if school:
+            results = results.filter(institution__contains=school)
 
-    def price_search(self, range_of_price):
+        return results.order_by('-available_rooms')
+
+    @staticmethod
+    def price_search(range_of_price, school):
         # split the query term eg '4000-8000' as [4000, 8000] and search the price range of the hostels that
         # have price ranges between the two. Hostel class has a method to split its price range
         hostels = Hostel.objects.filter(available_rooms__gt=0).order_by('-available_rooms')
+        if school:
+            hostels = hostels.filter(institution=school)
         res = []
         from_ = range_of_price.split("-")[0]
         to_ = range_of_price.split("-")[-1]
@@ -274,8 +291,11 @@ class Search(generic.TemplateView):
 
         return res
 
-    def house_type_search(self, look):
+    @staticmethod
+    def house_type_search(look, school):
         hostels = Hostel.objects.filter(available_rooms__gt=0)
+        if school:
+            hostels = hostels.filter(institution=school)
         res = {}
 
         for hostel in hostels:
@@ -283,7 +303,7 @@ class Search(generic.TemplateView):
             count_of_look = 0
             for room in hostel.room_set.all():
                 if room.house_type == look:
-                    count_of_look+=1
+                    count_of_look += 1
 
             # if a hostel has none of "the room type" it's not added
             if count_of_look:
@@ -294,7 +314,7 @@ class Search(generic.TemplateView):
 
         return res
 
-    def advanced_search(self, query):
+    def advanced_search(self, query, school):
         query = query.split(":")
         field = query[0].upper()
         look_up = query[-1]
@@ -304,7 +324,7 @@ class Search(generic.TemplateView):
         price = ["PRICE", "RENT", "MONTHLY"]
         institution = ["UNIVERSITY", "CAMPUS", "SCHOOL", "COLLEGE", "INSTITUTION", "VARSITY", "AT"]
         location = ["PLACE", "IN", "WHERE", "LOCATED"]
-        house_types = ["BEDROOM",]
+        house_types = ["BEDROOM", ]
         one_room = ["ONE", "1"]
         two_bedroom = ["TWO", "2"]
         bed_sitter = ["BS", "BEDSITTER"]
@@ -312,7 +332,7 @@ class Search(generic.TemplateView):
         if field in price:
             # price searches
             term = 'price'
-            results = self.price_search(look_up)
+            results = self.price_search(look_up, school)
 
         elif field in institution:
             # school search
@@ -323,6 +343,8 @@ class Search(generic.TemplateView):
             # location search
             term = 'location'
             results = Hostel.objects.filter(location__icontains=look_up).order_by('-available_rooms')
+            if school:
+                results = results.filter(institution=school)
 
         elif field in house_types:
             # house types
@@ -331,23 +353,23 @@ class Search(generic.TemplateView):
 
             if look_up in one_room:
                 look_up = "One Bedroom"
-                results = self.house_type_search('1B')
+                results = self.house_type_search('1B', school)
 
             elif look_up in two_bedroom:
                 look_up = "Two Bedroom"
-                results = self.house_type_search('2B')
+                results = self.house_type_search('2B', school)
 
             elif look_up in bed_sitter:
                 look_up = "Bedsitter"
-                results = self.house_type_search('BS')
+                results = self.house_type_search('BS', school)
 
             elif look_up.upper() == "SINGLE" or look_up == "SINGLE ROOM":
                 look_up = "Single Room"
-                results = self.house_type_search('SR')
+                results = self.house_type_search('SR', school)
 
             else:
                 # if none defaults to basic search
-                results = self.basic_search(look_up)
+                results = self.basic_search(look_up, school)
 
         return {'results': results, 'term': term, 'look_up': look_up}
 
@@ -360,22 +382,24 @@ class Search(generic.TemplateView):
         # retrieve previous searches
         try:
             recent = self.request.session['recent_searches']
+            school = self.request.session['school']
         except KeyError:
             self.request.session['recent_searches'] = []
+            school = None
             recent = self.request.session['recent_searches']
 
         # check if the search is advanced
         if re.search(r'\w+:\w+', query):
             if len(query.split(':')) == 2:
                 ad_search = True
-                temp = self.advanced_search(query)
+                temp = self.advanced_search(query, school)
                 results = temp['results']
                 ad_search_term = temp['term']
                 ad_search_term_l = temp['look_up']
             else:
-                results = self.basic_search(query)
+                results = self.basic_search(query, school)
         else:
-            results = self.basic_search(query)
+            results = self.basic_search(query, school)
 
         # if the search has results it is added to session searches
         if results:
@@ -385,6 +409,7 @@ class Search(generic.TemplateView):
             self.request.session['recent_searches'] = recent
 
         return render(self.request, self.template_name, {
+            'school': school,
             'query': query,
             'results': results,
             'advanced': ad_search,

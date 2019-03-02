@@ -132,11 +132,3 @@ class Booking(models.Model):
         self.room.available = True
         self.room.save()
         return super().delete()
-
-
-class PopularSearches(models.Model):
-    term = models.TextField()
-    count = models.IntegerField(default=0)
-
-    def __str__(self):
-        return "{} searched {} times".format(self.term, self.count)

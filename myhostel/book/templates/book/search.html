@@ -15,6 +15,7 @@
     {% if results %}
         <div class="top text-center">
             <h2>Showing results for "{{ query }}"</h2>
+            {% if school %}<h5>{{ school }} is your school of choice</h5>{% endif %}
         </div>
 
         <div class="results">

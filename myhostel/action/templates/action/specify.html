@@ -1,0 +1,42 @@
+{% extends 'home/base.html' %}
+{% load staticfiles %}
+
+{% block title %}Specify school{% endblock title %}
+
+{% block style %}<link rel="stylesheet" type="text/css" href="{% static 'action/css/help.css' %}">{% endblock style %}
+
+{% block help %}active{% endblock help %}
+
+{% block crumb %}
+<li class="breadcrumb-item">Specify School</li>
+{% endblock crumb %}
+
+{% block content %}
+
+<div id="spec" class="container">
+    <h1 class="text-center">Specify your School</h1>
+    <p class="lead text-center">To get more relevant search results please specify a school e.g. Kisii University,
+    main campus. {% if school %}<br /><small>You have currently choosen {{school}}</small>{% endif %}
+    </p>
+
+    <div class="container col-md-5 text-center">
+        <form action="" method="POST" role="form">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <select name="school" id="input" class="form-control">
+                        <option value="">-- Select One --</option>
+                        {% for school in schools %}
+                        <option value="{{school}}">{{school}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>   
+            <button type="submit" class="btn btn-dark">Submit</button>
+        </form>
+    </div>
+        
+
+</div>
+
+{% endblock content %}

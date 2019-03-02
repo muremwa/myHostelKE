@@ -2,9 +2,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from django.views.generic import RedirectView
 
 from book import views as book_views
+from action import views as action_views
 
 
 urlpatterns = [
@@ -28,6 +28,9 @@ urlpatterns = [
 
     # staff-actions/booking/4/
     path('staff-actions/bookings/<int:pk>/', book_views.BookingDetail.as_view(), name="booking"),
+
+    # specify-school/
+    path('specify-school/', action_views.add_hostel, name="specify"),
 
 ]
 
