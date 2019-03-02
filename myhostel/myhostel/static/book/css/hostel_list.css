@@ -1,34 +1,31 @@
-.hostel {
-    margin-bottom: 2em;
-    width: 100%;
-    /* background-color: #4e555c; */
-    background-color: pink;
-    color: cadetblue;
+.hostel-test {
+    height: 16em;
+    margin-bottom: 1em;
+    transition: 0.4s;
 }
 
-.hostel a {
-    color: rgb(117, 128, 128);
+.hostel-test-text {
+    background-color: rgba(75, 17, 75, 0.201);
+    width: 80%;
+    margin: auto;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    border-radius: 0.2em;
+    transition: 0.5s;
 }
 
-.side-cards {
-    margin-top: 2em;
-    background-color: #f8e9e993;
+.hostel-test-text-link {
+    color: rgb(221, 226, 230);
+    transition: 0.4s;
 }
 
-.hostel a:hover {
+.hostel-test-text-link:hover {
     text-decoration: none;
+    color: rgb(255, 255, 255);
 }
 
-.hostel-info {
-    padding: 4em;
-}
-
-.hostel-image {
-    width: 100%;
-}
-
-#hostel-line {
-    border-top-color: rgb(174, 175, 175);
+.hostel-test:hover .hostel-test-text {
+    background-color: rgba(75, 17, 75, 0.6);   
 }
 
 #main {
@@ -54,9 +51,63 @@
     margin: 1em;
 }
 
-@media screen and ( max-width: 400px){
-    .room {
-        color: green;
-        width: 30%;
+.side-cards {
+    margin-bottom: 0.3em;
+}
+
+@media screen and ( max-width: 990px){
+    .side-cards {
+        width: 28%;
+        margin-left: 1em;
+    }
+    .more-center {
+        display: flex;
+    }
+    .more-center-header {
+        text-align: center;
+        margin-top: 2em;
+    }
+}
+
+@media screen and ( max-width: 752px){
+    .hostel-test {
+        font-size: 9px;
+    }
+
+    .hostel-test .lead {
+        font-size: 10px;
+    }
+}
+
+@media screen and ( max-width: 574px){
+    .hostel-test {
+        font-size: 1em;
+        width: 80%;
+        margin: auto;
+        margin-bottom: 1.3em;
+    }
+
+    .hostel-test .lead {
+        font-size: 1em;
+    }
+}
+
+@media screen and ( max-width: 528px){
+    .side-cards {
+        width: 80%;
+        margin: auto;
+        margin-bottom: 1em;
+    }
+    .more-center {
+        display: block;
+    }
+}
+
+@media screen and ( max-width: 350px){
+    .hostel-test {
+        width: 98%;
+    }
+    .side-cards {
+        width: 95%;
     }
 }

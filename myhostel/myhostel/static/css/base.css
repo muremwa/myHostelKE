@@ -2,24 +2,35 @@ html {
     font-size: 13px;
 }
 
-/* * {
-    border: 1px solid navy;
-} */
-
 body {
     font-family: 'Google sans', sans-serif;
-    /* background-color: rgb(216, 212, 218); */
+    background-color: #d7dde4;
 }
 
-#navbar {
-    height: 5em;
-    
+.main {
+    padding-bottom: 3em;
+    padding-top: 2em;
+}
+
+nav h1 {
+    color: rgb(234, 255, 254);
+    margin-left: 1em;
+    margin-right: 0.6em;
 }
 
 .message-div {
     background: #f7f7f8;
     margin-top: -20px;
     height: 2em;
+}
+
+.breadcrumb {
+    background-color: #989b9e;
+    border-radius: 0;
+}
+
+.breadcrumb a {
+    color: aliceblue;
 }
 
 .card {
@@ -30,13 +41,8 @@ nav ol a:hover {
     text-decoration: none;
 }
 
-#brand-title {
-    font-size: 2em;
-}
-
 footer {
-    margin-top: 4em;
-    padding-top: 2em;
+    padding-top: 3em;
 }
 
 .context-dark, .bg-gray-dark, .bg-primary {
@@ -49,12 +55,6 @@ footer {
 .nav-list li {
     padding-top: 5px;
     padding-bottom: 5px;
-}
-
-.nav-list li a:hover:before {
-    margin-left: 0;
-    opacity: 1;
-    visibility: visible;
 }
 
 ul, ol {
@@ -73,9 +73,11 @@ ul, ol {
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.5);
 }
+
 .social-container .col {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 .nav-list li a:before {
     content: "\f14f";
     font: 400 21px/1 "Material Design Icons";
@@ -88,7 +90,6 @@ ul, ol {
     visibility: hidden;
     transition: .22s ease;
 }
-
 
 .over-view {
     height: 100vh;
@@ -112,6 +113,7 @@ ul, ol {
 
 #over-view-image {
     height: 100%;
+    transition: 0.4s;
 }
 
 .close {
@@ -129,3 +131,55 @@ ul, ol {
     height: 95vh;
 }
 
+@media screen and ( max-width: 1355px){
+    html {
+        font-size: 12px;
+    }
+    #over-view-image-div {
+        width: 88%;
+    }
+}
+
+@media screen and ( max-width: 977px){
+    #over-view-image-div {
+        width: 82%;
+    }
+
+    #over-view-image {
+        height: 80%;
+        margin-top: 5em;
+    }
+}
+
+@media screen and ( max-width: 848px){
+    #over-view-image-div {
+        width: 70%;
+    }
+
+    #over-view-image {
+        height: 60%;
+    }
+}
+
+@media screen and ( max-width: 740px){
+    #over-view-image-div {
+        width: 50%;
+    }
+
+    #over-view-image {
+        height: 40%;
+        margin-top: 13em;
+    }
+}
+
+@media screen and ( max-width: 680px){
+    body {
+        overflow: scroll;
+    }
+    .over-view {
+        display: none;
+    }
+    #main {
+        filter: blur(0);
+    }
+}

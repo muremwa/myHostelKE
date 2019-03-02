@@ -1,9 +1,16 @@
 .result {
+    margin: auto;
+    width: 60%;
     transition: 0.4s;
-    margin: 2em;
+    margin-top: 2em;
+    margin-bottom: 2em;
     padding: 0.3em;
     background: #ffc0cb;
     border-radius: 2px;
+}
+
+.special-search {
+    font-size: 1.7em;
 }
 
 .result * {
@@ -28,4 +35,29 @@
 
 .locate-pin-hostel {
     height: 2.3em;
+}
+
+@media screen and ( max-width: 964px){
+    .results {
+        font-size: 10.5px;
+    }
+    .result {
+        width: 70%;
+    }
+    .locate-pin-hostel {
+        width: 1.5em;
+        height: 1.5em;
+    }
+}
+
+@media screen and ( max-width: 734px){
+    .result {
+        width: 83%;
+    }
+}
+
+@media screen and ( max-width: 634px){
+    .result {
+        width: 90%;
+    }
 }

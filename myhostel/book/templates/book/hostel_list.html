@@ -2,35 +2,42 @@
 
 {% load staticfiles %}
 {% block style %}<link rel='stylesheet' type="text/css" href="{% static 'book/css/hostel_list.css' %}"> {% endblock style %}
-{% block home %}active{% endblock home %}
+{% block title %}hostels{% endblock title %}
+{% block book %}active{% endblock book %}
+
+{% block crumb %}
+<li class="breadcrumb-item">hostels</li>
+{% endblock crumb %}
 
 {% block content %}
 
-<div class='container'>
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-9">
-            {% for hostel in hostels %}
-                <div class="card hostel">
-                    <div class="row">
-                        <img class="col-md-7 hostel-image" src='{{ hostel.get_main_image.file.url }}'>
-                        <div class="col-md-5 hostel-info">
-                            <a href="{% url 'book:hostel' hostel.slug %}"><h2 class="text-center" data-toggle="tooltip" data-placement="top" title="{{ hostel }}">{{ hostel.name }}</h2></a>
-                            <hr id="hostel-line">
-                            <p>Institution: {{ hostel.institution }}</p>
-                            <p>Distance from admnistration block is {{ hostel.distance_from_admin }}m.</p>
-                            <p>Price range: {{ hostel.price_range }}</p>
-                            <div>
-                                <p><strong>{% if hostel.available_rooms %}{{ hostel.available_rooms }} room(s) are{% else %}No rooms{% endif %} available</strong></p>
+        <div class="col-lg-10">
+            <div class="row">
+                {% for hostel in hostels %}
+                    <div class="col-sm-3">
+                        <div style="background: url('{{hostel.get_main_image.file.url}}') center/cover;" class="hostel-test text-center card">
+                            <div class="hostel-test-text">
+                                <a class="hostel-test-text-link" href="{{ hostel.get_absolute_url}}">
+                                    <h3>{{ hostel.name }}</h3>
+                                    <p class="lead">
+                                        {{ hostel.institution }}<br />
+                                        {% if hostel.available_rooms %}{{ hostel.available_rooms}} room{% if hostel.available_rooms > 1%}s{% endif %} available{% else %}No rooms are available{% endif %}
+                                    </p>
+                                </a>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
-        <div class="col-md-3">
-        <h3>more actions</h3>
 
-            {% if popular %}
+        <div class="col-lg-2">
+            <h3 class="more-center-header">more actions</h3>
+
+            <div class="more-center">
+                {% if popular %}
                 <!-- popular content -->
                 <div class="card side-cards">
                     <img src="{% static 'css/images/hk.png' %}" alt="" class="card-img-top">
@@ -44,9 +51,9 @@
                         </ul>
                     </div>
                 </div>
-            {% endif %}
+                {% endif %}
 
-            {% if recent_searches %}
+                {% if recent_searches %}
                 <!-- Recent searches -->
                 <div class="card side-cards">
                     <img src="{% static 'css/images/hk.png' %}" alt="" class="card-img-top">
@@ -60,10 +67,10 @@
                         </ul>
                     </div>
                 </div>
-            {% endif %}
+                {% endif %}
 
-            <!-- Filters -->
-            <div class="card side-cards">
+                <!-- Filters -->
+                <div class="card side-cards">
                 <img src="{% static 'css/images/hk.png' %}" alt="" class="card-img-top">
                 <div class="card-body">
                     <span class="card-title text-center">filter now</span>
@@ -75,10 +82,10 @@
                         <li class="item3"><a href="{% url 'book:search' %}?query=bedroom:bs">Bedsitters</a></li>
                     </ul>
                 </div>
-            </div>
+                </div>
 
-            <!-- price filters-->
-            <div class="card side-cards">
+                <!-- price filters-->
+                <div class="card side-cards">
                 <img src="{% static 'css/images/hk.png' %}" alt="" class="card-img-top">
                 <div class="card-body">
                     <span class="card-title text-center">price groups</span>
@@ -90,9 +97,8 @@
                         <li class="item3"><a href="{% url 'book:search' %}?query=price:10000-100000">above 10000</a></li>
                     </ul>
                 </div>
+                </div>
             </div>
-
-
         </div>
     </div>
 </div>

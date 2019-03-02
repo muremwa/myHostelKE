@@ -11,16 +11,16 @@
 
 {% block content %}
 
-<div class="container">
+<div class="">
     {% if results %}
         <div class="top text-center">
             <h2>Showing results for "{{ query }}"</h2>
         </div>
 
-        <div class="results container col-md-8">
+        <div class="results">
             {% if advanced %}
                 {% if advanced_field == 'house_type' %}
-                    <h2 class="text-center">Hostels with "{{ advanced_lookup }}" rooms</h2>
+                    <h2 class="text-center special-search">Hostels with "{{ advanced_lookup }}" rooms</h2>
                     {% comment %} House type search {% endcomment %}
                     {% for result, value in results.items %}
                         <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image.file.url}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
@@ -43,7 +43,7 @@
                 {% else %}
 
                     {% if advanced_field == 'institution' %}
-                        <h2 class="text-center">Institution closest to "{{ advanced_lookup }}"</h2>
+                        <h2 class="text-center special-search">Institution closest to "{{ advanced_lookup }}"</h2>
                         {% comment %} institution search {% endcomment %}
                         {% for result in results %}
                             <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image.file.url}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
@@ -66,7 +66,7 @@
                     {% else %}
 
                         {% if advanced_field == 'location' %}
-                            <h2 class="text-center">Hostel located at "{{ advanced_lookup }}"</h2>
+                            <h2 class="text-center special-search">Hostel located at "{{ advanced_lookup }}"</h2>
                             {% comment %} Location search {% endcomment %}
                             {% for result in results %}
                                 <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image.file.url}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
@@ -88,7 +88,7 @@
                             {% endfor %}
                         {% else %}
                             {% if advanced_field == 'price' %}
-                                <h2 class="text-center">Hostels priced {{ advanced_lookup }}</h2>
+                                <h2 class="text-center special-search">Hostels priced {{ advanced_lookup }}</h2>
                                 {% comment %} Location search {% endcomment %}
                                 {% for result in results %}
                                     <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image.file.url}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
