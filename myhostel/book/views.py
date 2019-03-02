@@ -10,6 +10,9 @@ from .forms import BookRoomForm, HostelForm, HostelImagesFormSet
 
 import re
 
+class Home(generic.TemplateView):
+    template_name = "home/home.html"
+
 
 class Index(generic.ListView):
     model = Hostel

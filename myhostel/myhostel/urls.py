@@ -12,7 +12,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # main
-    path('', RedirectView.as_view(url='/book/')),
+    path('', book_views.Home.as_view(), name='home'),
 
     # book/
     path('book/', include('book.urls')),

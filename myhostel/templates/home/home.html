@@ -1,0 +1,66 @@
+{% extends "home/base.html" %}
+{% load staticfiles %}
+
+{% block title %}home{% endblock title %}
+{% block style %}<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">{% endblock style %}
+{% block home %}active{% endblock home %}
+
+{% block content %}
+    <div class="new-main">
+
+        <div class="container">
+            <!-- Top information -->
+            <div class="main-area">
+                <h1>myHostelKenya</h1>
+                <p class="lead top-text">Welcome to myHostelKenya. The website that makes it easier to book private living space in your school. <a href="{% url 'book:index' %}">Explore</a> hostels now or search below</p>
+            </div>
+
+            <!-- Main search bar -->
+            <div id="main-search-bar">
+
+                <form id="main-search-bar-form" method="GET" action="{% url 'book:search' %}" class="form-inline">
+                    <input id="main-search-bar-form-input" class="form-control mr-sm-4" type="search" name="query" value="{{ query }}" placeholder="Search for hostels" aria-label="Search">
+                    <button id="main-search-bar-form-btn" class="btn btn-dark my-2 my-sm-0" type="submit">Search</button>
+                </form>
+
+                <p class="learn-s text-center"><a href="">Learn how to search</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- important information -->
+    <div class="important-info">
+        <div class="container">
+            <p class="lead text-center">
+                More hostels available at myHostelKenya
+            </p>
+    
+            <div class="buttons-more row text-center">
+                <div class="more-bu"><a href="{% url 'book:index' %}" class="btn btn-outline-dark">Explore hostels</a></div>
+                <div class="more-bu"><a href="" class="btn btn-outline-dark">Help</a></div>
+            </div>
+            <p class="lead text-center specify">
+                To make your experience at myHostelKenya more fruitfull and worthwhile, please <a href="">specify</a> the institution you want to see hostels from. This will help us bring you more relevant results. <a href="">Learn more</a>
+            </p>
+            <div class="info-icos text-center">
+                <div class="info-icos-div"><img class="info-ico" src="{% static 'svg/bed.svg' %}"><p>500 rooms available</div>
+                <div class="info-icos-div"><img class="info-ico" src="{% static 'svg/book.svg' %}"><p>300 bookings made</div>
+                <div class="info-icos-div"><img class="info-ico" src="{% static 'svg/school.svg' %}"><p>20 institutions listed</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- important information -->
+    <div class="bottom-info">
+        <div class="container text-center">
+            <h3>What Happens When You Book</h3>
+            <p class="lead">When you book a room you will receive a message that tell you that you will receive more info on how to retain your room. You will be contacted within 24 hours of your booking. You will be provided with the contacts of the managers of the hostel you booked.</p>        
+
+            <div class="contact-us">
+                <div class="cont"><img src="{% static 'svg/call.svg' %}"/><p>+254792199276</p></div>
+                <div class="cont"><img src="{% static 'svg/email.svg' %}"/><p>help@myhostelkenya.co.ke</p></div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
