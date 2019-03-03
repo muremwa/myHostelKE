@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.text import slugify
+from django.shortcuts import reverse
 
 
 class PopularSearches(models.Model):
@@ -18,12 +20,23 @@ class Faq(models.Model):
     def __str__(self):
         return self.question
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.question)
+        return super().save()
+
+    def get_absolute_url(self):
+        return reverse('help:faq', args=[str(self.slug)])
+
 
 class Feedback(models.Model):
     text = models.TextField(help_text="Comment on your experience")
     email = models.EmailField(null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
+
+    class Meta:
+        ordering = ('-date',)
+        verbose_name_plural = "Feedback"
 
     def __str__(self):
         return "Feedback by {}".format(self.email)

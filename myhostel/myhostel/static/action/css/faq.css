@@ -1,0 +1,45 @@
+.faq {
+    width: 50%;
+    margin: auto;
+}
+
+.faqs {
+    min-height: 36vh;
+}
+
+.response-text {
+    width: 80%;
+    margin: auto;
+    text-align: justify;
+}
+
+.response {
+    min-height: 38vh;
+}
+
+
+@media screen and ( max-width: 1013px){
+    .faq {
+        width: 65%;
+    }
+    
+}
+
+@media screen and ( max-width: 779px){
+    .faq {
+        width: 75%;
+    }
+    .response-text {
+        width: 85%;
+    }    
+}
+
+@media screen and ( max-width: 385px){
+    .faq {
+        width: 80%;
+    }
+    .response-text {
+        width: 100%;
+    } 
+    
+}

@@ -11,21 +11,31 @@ from .forms import BookRoomForm, HostelForm, HostelImagesFormSet
 import re
 
 
-class Home(generic.TemplateView):
-    template_name = "home/home.html"
-
-
-class Index(generic.ListView):
-    model = Hostel
-    context_object_name = 'hostels'
-
-    def get_queryset(self):
+class Retriever:
+    def retrieve_school(self):
         try:
             school = self.request.session['school']
         except KeyError:
             self.request.session['school'] = None
             school = self.request.session['school']
+        return school
 
+
+class Home(generic.TemplateView, Retriever):
+    template_name = "home/home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['school'] = self.retrieve_school()
+        return context
+
+
+class Index(generic.ListView, Retriever):
+    model = Hostel
+    context_object_name = 'hostels'
+
+    def get_queryset(self):
+        school = self.retrieve_school()
         if school:
             query_set = Hostel.objects.filter(institution=school)
         else:
@@ -38,18 +48,20 @@ class Index(generic.ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
+        # recent searches
         try:
             recent = self.request.session['recent_searches'][-5:]
         except KeyError:
             self.request.session['recent_searches'] = []
             recent = self.request.session['recent_searches'][-5:]
 
+        context['school'] = self.retrieve_school()
         context['recent_searches'] = list(reversed(recent))
         context['popular'] = self.popular_hostels()
         return context
 
 
-class HostelDetail(generic.DetailView):
+class HostelDetail(generic.DetailView, Retriever):
     model = Hostel
     context_object_name = 'hostel'
     slug_url_kwarg = 'slug'
@@ -83,25 +95,25 @@ class HostelDetail(generic.DetailView):
             context['hostel'].views += 1
             self.request.session['seen'] = seen
         context['hostel'].save()
-
+        context['school'] = self.retrieve_school()
         return context
 
 
-class RoomDetail(View):
-    @staticmethod
-    def get(request, *args, **kwargs):
+class RoomDetail(View, Retriever):
+    def get(self, request, *args, **kwargs):
         room = get_object_or_404(Room, room_number=kwargs['room_number'])
 
         # if room is booked it will return a 404 error
         if room.available:
             return render(request, 'book/room_detail.html', {
-                'room': room
+                'room': room,
+                'school': self.retrieve_school()
             })
         else:
             raise Http404
 
 
-class RoomBooking(View):
+class RoomBooking(View, Retriever):
     template = 'book/now.html'
     form = BookRoomForm
 
@@ -112,6 +124,7 @@ class RoomBooking(View):
             raise Http404
 
         return render(request, self.template, {
+            'school': self.retrieve_school(),
             'room': room,
             'form': self.form
         })
@@ -144,11 +157,14 @@ class RoomBooking(View):
                 'room': room
             })
 
-        return render(request, 'book/success_booking.html', {'room': room})
+        return render(request, 'book/success_booking.html', {
+            'room': room,
+            'school': self.retrieve_school(),
+        })
 
 
 # staff actions home
-class StaffActions(generic.TemplateView):
+class StaffActions(generic.TemplateView, Retriever):
     template_name = 'book/staff.html'
 
     def get(self, request, *args, **kwargs):
@@ -159,6 +175,11 @@ class StaffActions(generic.TemplateView):
             raise Http404
         else:
             return super().get(request, args, kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['school'] = self.retrieve_school()
+        return context
 
 
 # add hostel
@@ -260,7 +281,7 @@ class BookingDetail(generic.DetailView):
 
 
 # search action
-class Search(generic.TemplateView):
+class Search(generic.TemplateView, Retriever):
     template_name = 'book/search.html'
 
     @staticmethod
@@ -272,7 +293,7 @@ class Search(generic.TemplateView):
                 Q(location__icontains=query)
         )
         results = Hostel.objects.filter(q_set)
-        print(school)
+
         if school:
             results = results.filter(institution__contains=school)
 
@@ -387,11 +408,11 @@ class Search(generic.TemplateView):
         # retrieve previous searches
         try:
             recent = self.request.session['recent_searches']
-            school = self.request.session['school']
         except KeyError:
             self.request.session['recent_searches'] = []
-            school = None
             recent = self.request.session['recent_searches']
+
+        school = self.retrieve_school()
 
         # check if the search is advanced
         if re.search(r'\w+:\w+', query):

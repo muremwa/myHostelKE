@@ -1,3 +1,8 @@
 #spec {
     height: 48vh;
 }
+
+#remove {
+    text-align: center;
+    margin-top: 2em;
+}
