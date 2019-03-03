@@ -37,6 +37,10 @@
     height: 2.3em;
 }
 
+.failed-search {
+    height: 48vh;
+}
+
 @media screen and ( max-width: 964px){
     .results {
         font-size: 10.5px;

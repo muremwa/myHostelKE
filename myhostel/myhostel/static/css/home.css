@@ -35,6 +35,11 @@
     opacity: 0.8;
     font-size: 20px;
     color: purple;
+    transition: 0.2s ease-in-out;
+}
+
+#main-search-bar-form-input:focus {
+    opacity: 1;
 }
 
 #main-search-bar-form-btn {
