@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block title %} booking {% endblock title %}
-
+{% block style %}<link rel="stylesheet" type="text/css" href="{% static 'book/css/now.css' %}">{% endblock style %}
 {% block crumb %}
     <li class="breadcrumb-item"><a href="{% url 'book:index' %}">hostels</a></li>
     <li class="breadcrumb-item"><a href="{% url 'book:hostel' room.hostel.slug  %}">{{ room.hostel.name }}</a></li>
@@ -14,12 +14,34 @@
 
 <!-- TODO: add a breadcrumb on success -->
 
-<div class="container col-md-6" style="height: 50vh;">
+<div class="container col-md-6">
     <div class="alert alert-info">
         <h2>Succesfully booked</h2>
         <p class="lead">Your will be contacted by us and provided with information on how to retain your room.</p>
         <span>Thank you for using myHostelKE</span>
     </div>
+    
+    
+    <form action="" method="POST" role="form">
+        <legend>Feedback <small>Share comments on your experience here</legend>
+
+        {% for field in feedback_form %}
+        <div class="form-group" id="{{field.label}}">
+            <label for="">{{field.label}}</label>
+            {{field}}
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-dark">send feedback</button>
+    </form>
+    
+    <script>
+        var ins = document.getElementsByTagName('input');
+        document.getElementsByTagName('textarea')[0].classList.add('form-control');
+        for (inp in ins) {
+            ins[inp].classList.add('form-control');
+        }
+    </script>
 </div>
 
 

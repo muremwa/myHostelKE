@@ -29,7 +29,7 @@ class Faq(models.Model):
 
 
 class Feedback(models.Model):
-    text = models.TextField(help_text="Comment on your experience")
+    text = models.TextField("Feedback")
     email = models.EmailField(null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
