@@ -5,7 +5,7 @@
 
 {% block style %}<link rel="stylesheet" type="text/css" href="{% static 'action/css/help.css' %}">{% endblock style %}
 
-{% block help %}active{% endblock help %}
+{% block school %}active{% endblock school %}
 
 {% block crumb %}
 <li class="breadcrumb-item">Specify School</li>
@@ -16,7 +16,7 @@
 <div id="spec" class="container">
     <h1 class="text-center">Specify your School</h1>
     <p class="lead text-center">To get more relevant search results please specify a school e.g. Kisii University,
-    main campus. {% if school %}<br /><small>You have currently choosen {{school}}</small>{% endif %}
+    main campus. {% if school %}<br /><small>You have currently choosen {{school}}.</small>{% endif %}
     </p>
 
     <div class="container col-md-5 text-center">
@@ -35,8 +35,9 @@
             <button type="submit" class="btn btn-dark">Submit</button>
         </form>
     </div>
-        
 
+    {% if school %}<p id="remove"><a href="{% url 'un-specify' %}">Remove</a> {{school}} and remain anonymous instead.</p>{% endif %}
+        
 </div>
 
 {% endblock content %}

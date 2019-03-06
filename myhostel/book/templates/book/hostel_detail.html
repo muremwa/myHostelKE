@@ -22,7 +22,7 @@
     <div id="top-info" class="row">
         <!-- Main image-->
         <div class="col-md-6">
-            <h1 class="text-center">{{ hostel.name }}</h1>
+            <h1 class="text-center">{{ hostel.name }} <small>at {{hostel.institution}}</small></h1>
             <img name="main-image" id="big-image" src="{{ hostel.get_main_image.file.url }}" alt="main-image">
         </div>
 

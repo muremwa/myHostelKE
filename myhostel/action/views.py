@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect, reverse
+from django.views import generic
+
 from book.models import Hostel
+from book.views import Retriever
+from .models import Faq
 
 
-def add_hostel(request):
+def add_school(request):
     if request.method == "POST":
         school = request.POST['school']
         if school:
@@ -24,3 +28,33 @@ def add_hostel(request):
             'schools': schools,
             'school': school,
         })
+
+
+def remove_school(request):
+    request.session['school'] = None
+    return redirect(reverse('book:index'))
+
+
+# all frequently asked questions
+class FaqList(generic.ListView, Retriever):
+    model = Faq
+    context_object_name = 'faqs'
+    template_name = 'action/faq_list.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context['school'] = self.retrieve_school()
+        return context
+
+
+# each faq
+class FaqDetail(generic.DetailView, Retriever):
+    model = Faq
+    context_object_name = 'faq'
+    template_name = 'action/faq.html'
+    slug_url_kwarg = 'slug'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context['school'] = self.retrieve_school()
+        return context

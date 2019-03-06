@@ -30,7 +30,13 @@ urlpatterns = [
     path('staff-actions/bookings/<int:pk>/', book_views.BookingDetail.as_view(), name="booking"),
 
     # specify-school/
-    path('specify-school/', action_views.add_hostel, name="specify"),
+    path('specify-school/', action_views.add_school, name="specify"),
+
+    # un-specify-school/
+    path('un-specify-school/', action_views.remove_school, name="un-specify"),
+
+    # help/
+    path('help/', include('action.urls')),
 
 ]
 

@@ -36,11 +36,12 @@
                   </li>
                   {% endif %}
               {% endif %}
-              <li class="nav-item">
-                <a class="nav-link {% block bug %}{% endblock bug %}" href="">bug</a>
+                <li class="nav-item">
+                <a class="nav-link {% block help %}{% endblock help %}" href="{% url 'help:faq-index' %}">help</a>
+              </li>
               </li>
                 <li class="nav-item">
-                <a class="nav-link {% block help %}{% endblock help %}" href="">help</a>
+                <a class="nav-link {% block school %}{% endblock school %}" href="{% url 'specify' %}">school{% if school %} - {{school}}{% endif %}</a>
               </li>
             </ul>
 

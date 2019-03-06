@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block title %} booking {% endblock title %}
-
+{% block style %}<link rel="stylesheet" type="text/css" href="{% static 'book/css/now.css' %}">{% endblock style %}
 {% block crumb %}
     <li class="breadcrumb-item"><a href="{% url 'book:index' %}">hostels</a></li>
     <li class="breadcrumb-item"><a href="{% url 'book:hostel' room.hostel.slug  %}">{{ room.hostel.name }}</a></li>
@@ -14,7 +14,7 @@
 
 <!-- TODO: add a breadcrumb on success -->
 
-<div class="container col-md-6" style="height: 50vh;">
+<div class="container col-md-6" style="min-height: 45vh;">
     <div class="alert alert-info">
         <h2>Succesfully booked</h2>
         <p class="lead">Your will be contacted by us and provided with information on how to retain your room.</p>

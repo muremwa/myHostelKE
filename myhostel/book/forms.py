@@ -36,4 +36,4 @@ class HostelForm(forms.ModelForm):
 
     class Meta:
         model = Hostel
-        exclude = ('slug', 'available_rooms', 'all_rooms')
+        exclude = ('slug', 'available_rooms', 'all_rooms', 'views')

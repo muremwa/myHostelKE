@@ -138,10 +138,15 @@
             {% endif %}
         </div>
     {% else %}
-        <h1 class="text-center">No results for "{{ query }}"</h1>
+        <div class="failed-search">
+            <h1 class="text-center">No results for "{{ query }}"</h1>
+    
+            <div class="container col-sm-6 text-center">
+                <p class="lead">Try specifying your institution eg "Kisii University Main campus"</p>
+                <p><a href="">Learn</a> how to get what you're looking for</p>
 
-        <div class="container col-sm-6 text-center">
-            <p class="lead">Try specifying your institution eg "Kisii University Main campus"</p>
+                {% if school %}<p id="remove"><a href="{% url 'un-specify' %}?next={% url 'book:search' %}query={{query}}">Remove</a> {{school}} and get results from other places.</p>{% endif %}
+            </div>
         </div>
     {% endif %}
 </div>
