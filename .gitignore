@@ -6,3 +6,4 @@ myhostel/media/*
 myhostel/db.sqlite3
 *.pyc
 *.exe
+action/migrations/*
