@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Faq, Feedback, Bug
+from .models import Faq
 
 
 class FaqAdmin(admin.ModelAdmin):
@@ -12,25 +12,3 @@ class FaqAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Faq, FaqAdmin)
-
-
-class FeedBackAdmin(admin.ModelAdmin):
-    fieldsets = [
-        ('Info', {'fields': ['email', ]}),
-        ('Feedback', {'fields': ['text']})
-    ]
-    list_display = ['email', 'date']
-
-
-admin.site.register(Feedback, FeedBackAdmin)
-
-
-class BugAdmin(admin.ModelAdmin):
-    fieldsets = [
-        ('Info', {'fields': ['page', ]}),
-        ('Bug Report', {'fields': ['report']})
-    ]
-    list_display = ['date']
-
-
-admin.site.register(Bug, BugAdmin)

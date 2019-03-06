@@ -7,7 +7,6 @@ from django.db.models import Q
 
 from .models import Hostel, Room, Booking, HostelImage
 from .forms import BookRoomForm, HostelForm, HostelImagesFormSet
-from action.forms import FeedBackForm
 
 import re
 
@@ -160,7 +159,6 @@ class RoomBooking(View, Retriever):
         return render(request, 'book/success_booking.html', {
             'room': room,
             'school': self.retrieve_school(),
-            'feedback_form': FeedBackForm,
         })
 
 
