@@ -40,6 +40,7 @@ class FaqList(generic.ListView, Retriever):
     model = Faq
     context_object_name = 'faqs'
     template_name = 'action/faq_list.html'
+    paginate_by = 15
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()

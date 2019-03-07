@@ -131,6 +131,12 @@ ul, ol {
     height: 95vh;
 }
 
+.pagination {
+    width: 90%;
+    margin: auto;
+    margin-bottom: 2em;
+}
+
 @media screen and ( max-width: 1355px){
     html {
         font-size: 12px;
@@ -169,17 +175,5 @@ ul, ol {
     #over-view-image {
         height: 40%;
         margin-top: 13em;
-    }
-}
-
-@media screen and ( max-width: 680px){
-    body {
-        overflow: scroll;
-    }
-    .over-view {
-        display: none;
-    }
-    #main {
-        filter: blur(0);
     }
 }

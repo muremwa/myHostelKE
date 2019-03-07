@@ -33,6 +33,7 @@ class Home(generic.TemplateView, Retriever):
 class Index(generic.ListView, Retriever):
     model = Hostel
     context_object_name = 'hostels'
+    paginate_by = 20
 
     def get_queryset(self):
         school = self.retrieve_school()
