@@ -3,6 +3,15 @@ from django.utils.text import slugify
 from django.urls import reverse
 
 
+def name_image(fullname, master, slug_of_master):
+    try:
+        fullname = fullname.split(".")
+    except AttributeError:
+        return
+    new_name = '{}_{}'.format(master, slug_of_master)
+    return "{}.{}".format(new_name, fullname[-1])
+
+
 # hostel compound
 class Hostel(models.Model):
     name = models.CharField(max_length=400, help_text='Preferred name of the premises')
@@ -34,6 +43,14 @@ class Hostel(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.name))
         return super().save(args, kwargs)
+
+    def delete(self, *args, **kwargs):
+        # delete all images once the hostel is deleted
+        images = self.hostelimage_set.all()
+        for image in images:
+            image.file.delete()
+            print('deleted {}'.format(image.file))
+        return super().delete()
 
     def get_main_image(self):
         return self.hostelimage_set.filter(is_main=True)[0]
@@ -76,6 +93,15 @@ class Room(models.Model):
                 self.hostel.save()
         return super().save(args, kwargs)
 
+    def delete(self, *args, **kwargs):
+        # delete all images once the room is deleted
+        images = self.roomimage_set.all()
+        self.hostel.available_rooms -= 1
+        for image in images:
+            image.file.delete()
+            print('deleted {}'.format(image.file))
+        return super().delete()
+
     def get_main_image(self):
         return self.roomimage_set.filter(is_main=True)[0]
 
@@ -91,16 +117,21 @@ class Room(models.Model):
             return self.house_types[3][-1]
 
     def get_absolute_url(self):
-        return reverse('book:room', kwargs={'slug': str(self.hostel.slug), 'room_number':str(self.room_number)})
+        return reverse('book:room', kwargs={'slug': str(self.hostel.slug), 'room_number': str(self.room_number)})
 
 
 class RoomImage(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     file = models.ImageField(upload_to='rooms/', help_text="PLEASE CROP TO 16:9")
     is_main = models.BooleanField(default=False, help_text="PLEASE MARK ONE AS MAIN!!!!")
+    objects = models.Manager()
 
     def __str__(self):
         return 'For {}'.format(self.room)
+
+    def save(self, *args, **kwargs):
+        self.file.name = name_image(self.file.name, 'room', self.room.room_number)
+        return super().save()
 
 
 class HostelImage(models.Model):
@@ -111,6 +142,10 @@ class HostelImage(models.Model):
 
     def __str__(self):
         return 'For {}'.format(self.hostel)
+
+    def save(self, *args, **kwargs):
+        self.file.name = name_image(self.file.name, 'hostel', self.hostel.slug)
+        return super().save()
 
 
 # bookings
