@@ -1,6 +1,10 @@
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
+from django.utils.translation import ugettext_lazy as _
+from django.core.validators import ValidationError
+
+import re
 
 
 def name_image(fullname, master, slug_of_master):
@@ -10,6 +14,15 @@ def name_image(fullname, master, slug_of_master):
         return
     new_name = '{}_{}'.format(master, slug_of_master)
     return "{}.{}".format(new_name, fullname[-1])
+
+
+def sixteen_by_nine(width, height):
+    lane = width*9
+    lane = int(lane/16)
+    if lane == int(height):
+        return True
+    else:
+        return False
 
 
 # hostel compound
@@ -39,6 +52,18 @@ class Hostel(models.Model):
 
     def __str__(self):
         return '{} at {}'.format(self.name, self.institution)
+
+    def clean(self):
+        # the price range should be in the correct format
+        if not re.search(r'KSH\s\d*\s-\sKSH\s\d*', str(self.price_range)):
+            raise ValidationError(_('Please use the correct format for price range as described.'))
+
+        # ranges should make sense
+        ranges = str(self.price_range).split(" ")
+        if ranges[1] > ranges[-1]:
+            raise ValidationError(_("The range starts from lowest to highest"))
+
+        return super().clean()
 
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self.name))
@@ -85,6 +110,22 @@ class Room(models.Model):
 
     def __str__(self):
         return 'Room number {} a {} from {}'.format(self.room_number, self.house_type, self.hostel)
+
+    def clean(self):
+        # price should not be lower or higher than price range
+        # noinspection PyUnresolvedReferences
+        hostel_range = self.hostel.get_prices()
+        # noinspection PyTypeChecker
+        if self.price < int(hostel_range[0]) or self.price > int(hostel_range[-1]):
+            raise ValidationError(_(
+                "Ensure price is within the price range of the \"{}\" that is between {} and {}".format(
+                    self.hostel.name,
+                    hostel_range[0],
+                    hostel_range[-1]
+                )
+            ))
+
+        return super().clean()
 
     def save(self, *args, **kwargs):
         if not self.tallied:
@@ -146,6 +187,14 @@ class RoomImage(models.Model):
         self.file.delete()
         return super().delete()
 
+    def clean(self):
+        # image to be 16:9
+        # noinspection PyUnresolvedReferences
+        if not sixteen_by_nine(self.file.width, self.file.height):
+            raise ValidationError(_('Image is not 16:9 please crop it'))
+
+        return super().clean()
+
 
 class HostelImage(models.Model):
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
@@ -163,6 +212,14 @@ class HostelImage(models.Model):
     def delete(self, *args, **kwargs):
         self.file.delete()
         return super().delete()
+
+    def clean(self):
+        # image to be 16:9
+        # noinspection PyUnresolvedReferences
+        if not sixteen_by_nine(self.file.width, self.file.height):
+            raise ValidationError(_('Image is not 16:9 please crop it'))
+
+        return super().clean()
 
 
 # bookings
