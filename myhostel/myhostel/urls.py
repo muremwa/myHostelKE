@@ -20,9 +20,6 @@ urlpatterns = [
     # staff-action/add-hostel/
     path('staff-actions/', book_views.StaffActions.as_view(), name='staff'),
 
-    # staff-action/add-hostel/
-    path('staff-actions/add-hostel/', book_views.StaffAddHostel.as_view(), name='add-hostel'),
-
     # staff-actions/bookings/
     path('staff-actions/bookings/', book_views.BookingList.as_view(), name='booking-list'),
 

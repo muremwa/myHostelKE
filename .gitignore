@@ -9,3 +9,4 @@ myhostel/db.sqlite3
 *.exe
 action/migrations/*
 book/migrations/*
+.vscode/

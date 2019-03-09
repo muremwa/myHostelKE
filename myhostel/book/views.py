@@ -1,12 +1,11 @@
 from django.views import generic, View
 from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.http import Http404
-from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib import messages
 from django.db.models import Q
 
-from .models import Hostel, Room, Booking, HostelImage
-from .forms import BookRoomForm, HostelForm, HostelImagesFormSet
+from .models import Hostel, Room, Booking
+from .forms import BookRoomForm
 
 import re
 
@@ -181,68 +180,6 @@ class StaffActions(generic.TemplateView, Retriever):
         context = super().get_context_data()
         context['school'] = self.retrieve_school()
         return context
-
-
-# add hostel
-class StaffAddHostel(View):
-    template = 'book/add_hostel.html'
-    hostel_form_class = HostelForm
-    images_form_set = HostelImagesFormSet
-
-    def get(self, *args, **kwargs):
-        if not self.request.user:
-            raise Http404
-        elif not self.request.user.is_staff:
-            raise Http404
-        else:
-            return render(self.request, self.template, {
-                'form': self.hostel_form_class(initial={'price_range': 'KSH 0000 - KSH 0000'}),
-                'images_form': self.images_form_set
-            })
-
-    @staticmethod
-    def save_hostel_images(hostel, images):
-        # save images for a hostel
-        for k, img in enumerate(images):
-
-            # the first is the main image
-            if k == 0:
-                main = True
-            else:
-                main = False
-
-            HostelImage.objects.create(
-                hostel=hostel,
-                file=img,
-                is_main=main
-            )
-
-    def post(self, *args, **kwargs):
-        hostel_form = self.hostel_form_class(self.request.POST, self.request.FILES)
-        new_hostel = None
-        images = []
-
-        if hostel_form.is_valid():
-            for i in range(5):
-                # dump all images into a list that is sent to the image saving method
-                try:
-                    images.append(self.request.FILES['form-{}-hostel_image'.format(i)])
-                except MultiValueDictKeyError:
-                    break
-
-            # always have an image for the hostel
-            if not any(images):
-                messages.add_message(self.request, messages.WARNING, 'Please add at least one image')
-                return render(self.request, self.template, {
-                    'form': hostel_form,
-                    'images_form': self.images_form_set
-                })
-
-            hostel_form.save()
-            new_hostel = get_object_or_404(Hostel, name=hostel_form.cleaned_data['name'])
-            self.save_hostel_images(new_hostel, images)
-
-        return redirect(new_hostel.get_absolute_url())
 
 
 # booking list
