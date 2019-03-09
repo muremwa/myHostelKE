@@ -142,6 +142,10 @@ class RoomImage(models.Model):
         self.file.name = name_image(self.file.name, 'room', self.room.room_number)
         return super().save()
 
+    def delete(self, *args, **kwargs):
+        self.file.delete()
+        return super().delete()
+
 
 class HostelImage(models.Model):
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
@@ -155,6 +159,10 @@ class HostelImage(models.Model):
     def save(self, *args, **kwargs):
         self.file.name = name_image(self.file.name, 'hostel', self.hostel.slug)
         return super().save()
+
+    def delete(self, *args, **kwargs):
+        self.file.delete()
+        return super().delete()
 
 
 # bookings
