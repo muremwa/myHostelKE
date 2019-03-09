@@ -53,7 +53,11 @@ class Hostel(models.Model):
         return super().delete()
 
     def get_main_image(self):
-        return self.hostelimage_set.filter(is_main=True)[0]
+        try:
+            img = self.hostelimage_set.filter(is_main=True)[0].file.url
+        except IndexError:
+            img = '/media/hostel/default_hostel.jpg'
+        return img
 
     def get_absolute_url(self):
         return reverse('book:hostel', args=[str(self.slug)])
@@ -103,7 +107,11 @@ class Room(models.Model):
         return super().delete()
 
     def get_main_image(self):
-        return self.roomimage_set.filter(is_main=True)[0]
+        try:
+            img = self.roomimage_set.filter(is_main=True)[0].file.url
+        except IndexError:
+            img = '/media/rooms/default_room.png'
+        return img
 
     def get_house_type(self):
         type_ = self.house_type
@@ -130,6 +138,7 @@ class RoomImage(models.Model):
         return 'For {}'.format(self.room)
 
     def save(self, *args, **kwargs):
+        # noinspection PyUnresolvedReferences
         self.file.name = name_image(self.file.name, 'room', self.room.room_number)
         return super().save()
 

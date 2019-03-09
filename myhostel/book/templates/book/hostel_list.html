@@ -17,7 +17,7 @@
             <div class="row">
                 {% for hostel in hostels %}
                     <div class="col-sm-3">
-                        <div style="background: url('{{hostel.get_main_image.file.url}}') center/cover;" class="hostel-test text-center card">
+                        <div style="background: url('{{hostel.get_main_image}}') center/cover;" class="hostel-test text-center card">
                             <div class="hostel-test-text">
                                 <a class="hostel-test-text-link" href="{{ hostel.get_absolute_url}}">
                                     <h3>{{ hostel.name }}</h3>

@@ -1,4 +1,5 @@
 venv/*
+venv
 myhostel/media/*
 .idea/*
 *.xml
