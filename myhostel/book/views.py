@@ -235,7 +235,7 @@ class Search(generic.TemplateView, Retriever):
         if school:
             results = results.filter(institution__contains=school)
 
-        return results.order_by('-available_rooms')
+        return results.filter(available_rooms__gt=0).order_by('-available_rooms')
 
     @staticmethod
     def price_search(range_of_price, school):
