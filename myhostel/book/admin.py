@@ -20,7 +20,7 @@ class RoomAdmin(admin.ModelAdmin):
 
     list_display = ['room_number', 'hostel', 'house_type', 'price', 'available']
     list_filter = ['house_type',]
-    search_fields = ['house_type', 'price', 'room_number', 'hostel']
+    search_fields = ['house_type', 'price', 'room_number',]
     inlines = (RoomImageInline,)
 
 

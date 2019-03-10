@@ -227,7 +227,6 @@ class Booking(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, help_text='Enter your preferred name')
     phone_number = models.CharField(max_length=10, help_text='Enter phone number')
-    cleared = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     objects = models.Manager()
 
