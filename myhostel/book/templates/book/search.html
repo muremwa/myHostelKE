@@ -24,7 +24,7 @@
                     <h2 class="text-center special-search">Hostels with "{{ advanced_lookup }}" rooms</h2>
                     {% comment %} House type search {% endcomment %}
                     {% for result, value in results.items %}
-                        <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image.file.url}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
+                        <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
                             <a href="{% url 'book:hostel' result.slug %}">
                                 <div class="result-name text-center">
                                     <h3>{{ result.name }} <br /><small><strong>{{ value }} {{ advanced_lookup }}</strong> rooms available</small></h3>
@@ -47,7 +47,7 @@
                         <h2 class="text-center special-search">Institution closest to "{{ advanced_lookup }}"</h2>
                         {% comment %} institution search {% endcomment %}
                         {% for result in results %}
-                            <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image.file.url}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
+                            <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
                                 <a href="{% url 'book:hostel' result.slug %}">
                                     <div class="result-name text-center">
                                         <h3><strong>{{ result.name }}</strong><br/><small>at</small><br/>{{result.institution}}</h3>
@@ -70,7 +70,7 @@
                             <h2 class="text-center special-search">Hostel located at "{{ advanced_lookup }}"</h2>
                             {% comment %} Location search {% endcomment %}
                             {% for result in results %}
-                                <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image.file.url}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
+                                <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
                                     <a href="{% url 'book:hostel' result.slug %}">
                                         <div class="result-name text-center">
                                             <h3><strong>{{ result.name }}</strong><br/><small><img style="height: 20px;" class="locate-pin-hostel" src="{% static 'svg/place.svg' %}" alt="place ico"><br/>{{ result.location }}</small></h3>
@@ -92,7 +92,7 @@
                                 <h2 class="text-center special-search">Hostels priced {{ advanced_lookup }}</h2>
                                 {% comment %} Location search {% endcomment %}
                                 {% for result in results %}
-                                    <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image.file.url}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
+                                    <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
                                         <a href="{% url 'book:hostel' result.slug %}">
                                             <div class="result-name text-center">
                                                 <h3><strong>{{ result.name }}</strong><br/><small><br/>{{ result.price_range}}</small></h3>
@@ -119,7 +119,7 @@
             
             {% else %}
                 {% for result in results %}
-                    <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image.file.url}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
+                    <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
                         <a href="{% url 'book:hostel' result.slug %}">
                             <div class="result-name text-center">
                                 <h3>{{ result.name }}</strong><br/><small><img class="locate-pin-hostel" src="{% static 'svg/place.svg' %}" alt=""> {{result.location}}</small></h3>
