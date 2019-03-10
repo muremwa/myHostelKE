@@ -12,6 +12,8 @@ var ima;
 var pos;
 var maxI;
 var di;
+var leftButton = document.querySelector('.left');
+var rightButton = document.querySelector('.right');
 
 $(document).on('click', '.close-js-over', function () {
     over.style.display = 'none';
@@ -36,8 +38,19 @@ function enlargeImages (i) {
             pos = ima.indexOf(ima[image]);
         }
     }
+    console.log(pos);
     overImg.src = i.src;
     over.style.display = "";
+    if (pos==maxI) {
+        rightButton.style.visibility = 'hidden';
+        leftButton.style.visibility = 'visible';
+    } else if (pos==0) {
+        leftButton.style.visibility = 'hidden';
+        rightButton.style.visibility = 'visible';
+    } else {
+        leftButton.style.visibility = 'visible';
+        rightButton.style.visibility = 'visible';
+    }
 }
 
 $(document).on('click', '.over-js-img', function () {
@@ -66,8 +79,11 @@ $(document).on('click', '.left', function () {
     overImg.src = ima[pos-1]
     pos-=1;
 
-    if (pos<0) {
-        pos = maxI+1;
+    if (pos==0) {
+        this.style.visibility = 'hidden';
+    }
+    if (pos<maxI) {
+        rightButton.style.visibility = 'visible';
     }
 })
 
@@ -75,8 +91,11 @@ $(document).on('click', '.right', function () {
     overImg.src = ima[pos+1]
     pos+=1;
 
-    if (pos>maxI) {
-        pos = -1;
+    if (pos==maxI) {
+        this.style.visibility = "hidden";
+    }
+    if (pos>0) {
+        leftButton.style.visibility = 'visible'
     }
 })
 

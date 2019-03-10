@@ -6,6 +6,7 @@ from book.forms import BookRoomForm
 # noinspection PyUnresolvedReferences
 from book.models import Hostel, Room
 
+
 @tag('book-form')
 class BookFormTest(TestCase):
     def setUp(self):
