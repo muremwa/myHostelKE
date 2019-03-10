@@ -20,7 +20,7 @@ class RoomAdmin(admin.ModelAdmin):
 
     list_display = ['room_number', 'hostel', 'house_type', 'price', 'available']
     list_filter = ['house_type',]
-    search_fields = ['house_type', 'price']
+    search_fields = ['house_type', 'price', 'room_number', 'hostel']
     inlines = (RoomImageInline,)
 
 
@@ -31,7 +31,7 @@ class HostelAdmin(admin.ModelAdmin):
     ]
     list_display = ['name', 'institution', 'distance_from_admin']
     list_filter = ['institution',]
-    search_fields = ['institution', 'location']
+    search_fields = ['institution', 'location', 'name']
     inlines = (HostelImageInline,)
 
 
