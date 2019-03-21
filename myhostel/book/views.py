@@ -318,6 +318,9 @@ class Search(generic.TemplateView, Retriever):
                 # if none defaults to basic search
                 results = self.basic_search(look_up, school)
 
+            if school:
+                results = results.filter(institution__icontains=school)
+
         return {'results': results, 'term': term, 'look_up': look_up}
 
     def get(self, *args, **kwargs):
