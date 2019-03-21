@@ -200,6 +200,8 @@ class BookingTestCase(TestCase):
             'phone_number': '0787277823'
         }
         url = self.room_3.booking_url()
+        original_rooms = self.room_3.hostel.available_rooms
+        original_rooms_bs = self.room_3.hostel.available_rooms
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'book/now.html')
@@ -208,3 +210,12 @@ class BookingTestCase(TestCase):
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'book/success_booking.html')
+
+        # get the same url
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+        # the hostel should have one less avaliable room and on less available room of that type
+        hostel = Hostel.objects.get(pk=self.room_3.pk)
+        self.assertEqual(hostel.available_rooms, original_rooms)
+        self.assertEqual(hostel.bs, original_rooms_bs)
