@@ -180,8 +180,8 @@ class BookingTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'book/hostel_list.html')
         # no hostels with unavailable rooms
-        self.assertNotContains(response, self.hostel_5)
-        self.assertContains(response, self.hostel_1)
+        self.assertNotContains(response, self.hostel_5.name)
+        self.assertContains(response, self.hostel_1.name)
 
     @tag('hostel')
     def test_hostel_detail(self):
