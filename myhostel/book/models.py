@@ -7,15 +7,6 @@ from django.core.validators import ValidationError
 import re
 
 
-def name_image(fullname, master, slug_of_master):
-    try:
-        fullname = fullname.split(".")
-    except AttributeError:
-        return
-    new_name = '{}_{}'.format(master, slug_of_master)
-    return "{}.{}".format(new_name, fullname[-1])
-
-
 def sixteen_by_nine(width, height):
     lane = width*9
     lane = int(lane/16)
@@ -64,7 +55,8 @@ class Hostel(models.Model):
 
         # ranges should make sense
         ranges = str(self.price_range).split(" ")
-        if ranges[1] > ranges[-1]:
+        
+        if int(ranges[1]) > int(ranges[-1]):
             raise ValidationError(_("The range starts from lowest to highest"))
 
         return super().clean()
@@ -177,7 +169,6 @@ class Room(models.Model):
         self.hostel.available_rooms -= 1
         for image in images:
             image.file.delete()
-            print('deleted {}'.format(image.file))
         return super().delete()
 
     def get_main_image(self):
@@ -201,20 +192,22 @@ class Room(models.Model):
     def get_absolute_url(self):
         return reverse('book:room', kwargs={'slug': str(self.hostel.slug), 'room_number': str(self.room_number)})
 
+    def booking_url(self):
+        return self.get_absolute_url() + 'now/'
+
+
+def upload_room_to(instance, filename):
+    return "hostel/{}/{}/{}".format(instance.room.hostel.name, instance.room.room_number, filename)
+
 
 class RoomImage(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    file = models.ImageField(upload_to='rooms/', help_text="PLEASE CROP TO 16:9")
+    file = models.ImageField(upload_to=upload_room_to, help_text="PLEASE CROP TO 16:9")
     is_main = models.BooleanField(default=False, help_text="PLEASE MARK ONE AS MAIN!!!!")
     objects = models.Manager()
 
     def __str__(self):
         return 'For {}'.format(self.room)
-
-    def save(self, *args, **kwargs):
-        # noinspection PyUnresolvedReferences
-        self.file.name = name_image(self.file.name, 'room', self.room.room_number)
-        return super().save()
 
     def delete(self, *args, **kwargs):
         self.file.delete()
@@ -222,25 +215,24 @@ class RoomImage(models.Model):
 
     def clean(self):
         # image to be 16:9
-        # noinspection PyUnresolvedReferences
         if not sixteen_by_nine(self.file.width, self.file.height):
             raise ValidationError(_('Image is not 16:9 please crop it'))
 
         return super().clean()
 
 
+def upload_hostel_to(instance, filename):
+    return 'hostel/{}/images/{}'.format(instance.hostel.name, filename)
+
+
 class HostelImage(models.Model):
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
-    file = models.ImageField(upload_to='hostel/', help_text="PLEASE CROP TO 16:9")
+    file = models.ImageField(upload_to=upload_hostel_to, help_text="PLEASE CROP TO 16:9")
     is_main = models.BooleanField(default=False, help_text="PLEASE MARK ONE AS MAIN!!!!")
     objects = models.Manager()
 
     def __str__(self):
         return 'For {}'.format(self.hostel)
-
-    def save(self, *args, **kwargs):
-        self.file.name = name_image(self.file.name, 'hostel', self.hostel.slug)
-        return super().save()
 
     def delete(self, *args, **kwargs):
         self.file.delete()

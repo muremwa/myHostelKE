@@ -41,17 +41,14 @@ class HostelModelTestCase(TestCase):
         # all rooms and views should be 0
         self.assertEqual(self.hostel_1.available_rooms, 0)
         self.assertEqual(self.hostel_1.views, 0)
-        print('rooms and views okay')
 
     @tag('main-img')
     def test_main_image(self):
         # get a main image or default image
         self.assertEqual(self.hostel_1.get_main_image(), '/media/hostel/default_hostel.jpg')
-        print('default image okay')
         # create new hostel image and receive it instead of default
         self.img_1_1.save()
         self.assertEqual(self.hostel_1.get_main_image(), '/media/hostel/hostel_the-crud.jpg')
-        print('new main image okay')
         self.img_1_1.delete()
 
     @tag('room-overall')
@@ -59,19 +56,16 @@ class HostelModelTestCase(TestCase):
         # hostel should have +1 rooms
         self.room_1_1.save()
         self.assertEqual(self.hostel_1.available_rooms, 1)
-        print('new room added')
 
     @tag('hostel-slug')
     def test_hostel_slug(self):
         # make sure the slug is slug-crud
         self.assertEqual(self.hostel_1.slug, slugify(self.hostel_1.name))
-        print('slugs okay')
 
     @tag('prices')
     def test_prices_range(self):
         # should return [4500, 6000]
         self.assertListEqual(self.hostel_1.get_prices(), ['4500', '6000'])
-        print('prices okay')
 
     @tag('url')
     def test_absolute_url(self):
@@ -79,7 +73,6 @@ class HostelModelTestCase(TestCase):
         self.assertEqual(self.hostel_1.get_absolute_url(), '/book/hostel/the-crud/')
         # url for room should be /book/hostel/the-crud/cr-1/
         self.assertEqual(self.room_1_1.get_absolute_url(), '/book/hostel/the-crud/cr-1/')
-        print('url is okay')
 
     @tag('room-img')
     def test_room_img(self):
