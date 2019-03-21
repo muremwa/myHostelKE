@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.http import Http404
 from django.contrib import messages
 from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Hostel, Room, Booking
 from .forms import BookRoomForm
@@ -148,6 +149,7 @@ class RoomBooking(View, Retriever):
                 )
                 room.available = False
                 room.hostel.available_rooms -= 1
+                room.hostel.decrement_room_type(room.house_type)
                 room.hostel.save()
                 room.save()
             else:
@@ -188,6 +190,7 @@ class BookingList(generic.ListView):
     model = Booking
     template_name = 'book/bookings_list.html'
     context_object_name = 'bookings'
+    paginate_by = 10
 
     def get(self, request, *args, **kwargs):
         if not request.user.is_staff:
@@ -214,8 +217,7 @@ class BookingDetail(generic.DetailView):
             raise Http404
         else:
             booking = get_object_or_404(Booking, pk=kwargs['pk'])
-            booking.cleared = True
-            booking.save()
+            booking.clear()
             messages.add_message(request, messages.INFO, 'Booking cleared')
             return redirect(reverse('booking-list'))
 
@@ -263,29 +265,6 @@ class Search(generic.TemplateView, Retriever):
 
         return res
 
-    @staticmethod
-    def house_type_search(look, school):
-        hostels = Hostel.objects.filter(available_rooms__gt=0)
-        if school:
-            hostels = hostels.filter(institution=school)
-        res = {}
-
-        for hostel in hostels:
-            # increment this for each of "the room type" the hostel has.
-            count_of_look = 0
-            for room in hostel.room_set.all():
-                if room.house_type == look:
-                    count_of_look += 1
-
-            # if a hostel has none of "the room type" it's not added
-            if count_of_look:
-                res[hostel] = count_of_look
-
-        # sort the hostels according to the number of "the room type" each has
-        res = dict(reversed(sorted(res.items(), key=lambda kv: kv[1])))
-
-        return res
-
     def advanced_search(self, query, school):
         query = query.split(":")
         field = query[0].upper()
@@ -325,19 +304,19 @@ class Search(generic.TemplateView, Retriever):
 
             if look_up in one_room:
                 look_up = "One Bedroom"
-                results = self.house_type_search('1B', school)
+                results = Hostel.objects.all().filter(one__gt=0).order_by('-one')
 
             elif look_up in two_bedroom:
                 look_up = "Two Bedroom"
-                results = self.house_type_search('2B', school)
+                results = Hostel.objects.all().filter(two__gt=0).order_by('-two')
 
             elif look_up in bed_sitter:
                 look_up = "Bedsitter"
-                results = self.house_type_search('BS', school)
+                results = Hostel.objects.all().filter(bs__gt=0).order_by('-bs')
 
             elif look_up.upper() == "SINGLE" or look_up == "SINGLE ROOM":
                 look_up = "Single Room"
-                results = self.house_type_search('SR', school)
+                results = Hostel.objects.all().filter(sr__gt=0).order_by('-sr')
 
             else:
                 # if none defaults to basic search
@@ -380,6 +359,22 @@ class Search(generic.TemplateView, Retriever):
             recent.append(query)
             self.request.session['recent_searches'] = recent
 
+        try:
+            count = results.count()
+        except TypeError:
+            count = len(results)
+
+        # pagination
+        page = self.request.GET.get('page', 1)
+        paginator = Paginator(results, 2)
+
+        try:
+            results = paginator.page(page)
+        except PageNotAnInteger:
+            results = paginator.page(1)
+        except EmptyPage:
+            results = paginator.page(paginator.num_pages)
+
         return render(self.request, self.template_name, {
             'school': school,
             'query': query,
@@ -387,4 +382,5 @@ class Search(generic.TemplateView, Retriever):
             'advanced': ad_search,
             'advanced_field': ad_search_term,
             'advanced_lookup': ad_search_term_l,
+            'count_results': count,
         })

@@ -14,6 +14,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-10">
+            {% if hostels %}
             <div class="row">
                 {% for hostel in hostels %}
                     <div class="col-sm-3">
@@ -31,7 +32,12 @@
                     </div>
                 {% endfor %}
             </div>
+
+            {% else %}
+            <div class="alert alert-info text-center"><h1>No Hostels available at this time</h1></div>
+            {% endif %}
         </div>
+        
 
         <div class="col-lg-2">
             <h3 class="more-center-header">more actions</h3>
