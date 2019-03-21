@@ -362,7 +362,7 @@ class Search(generic.TemplateView, Retriever):
 
         # pagination
         page = self.request.GET.get('page', 1)
-        paginator = Paginator(results, 2)
+        paginator = Paginator(results, 10)
 
         try:
             results = paginator.page(page)
