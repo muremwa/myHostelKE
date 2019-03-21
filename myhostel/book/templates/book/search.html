@@ -23,11 +23,11 @@
                 {% if advanced_field == 'house_type' %}
                     <h2 class="text-center special-search">Hostels with "{{ advanced_lookup }}" rooms</h2>
                     {% comment %} House type search {% endcomment %}
-                    {% for result, value in results.items %}
+                    {% for result in results %}
                         <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
                             <a href="{% url 'book:hostel' result.slug %}">
                                 <div class="result-name text-center">
-                                    <h3>{{ result.name }} <br /><small><strong>{{ value }} {{ advanced_lookup }}</strong> rooms available</small></h3>
+                                    <h3>{{ result.name }} <br /><small><strong>{% if advanced_lookup == "One Bedroom" %}{{result.one}} {% else %}{% if advanced_lookup == "Two Bedroom" %}{{result.two}}{% else %}{% if advanced_lookup == "Single Room" %}{{result.sr}}{% else %}{{result.bs}}{% endif %}{% endif %}{% endif %} {{ advanced_lookup }}</strong> rooms available</small></h3>
                                     <hr>
                                 </div>                                
 
@@ -90,7 +90,7 @@
                         {% else %}
                             {% if advanced_field == 'price' %}
                                 <h2 class="text-center special-search">Hostels priced {{ advanced_lookup }}</h2>
-                                {% comment %} Location search {% endcomment %}
+                                {% comment %} Price search {% endcomment %}
                                 {% for result in results %}
                                     <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
                                         <a href="{% url 'book:hostel' result.slug %}">
@@ -150,5 +150,38 @@
         </div>
     {% endif %}
 </div>
+
+
+    {% if results.has_other_pages %}
+    <div class="container text-center">
+        <div class="alert alert-info">
+            Page {{results.number}} of {{ count_results }} results.
+        </div>
+        <ul class="pagination">
+            {% if results.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{results.previous_page_number}}&query={{query}}">&laquo;</a></li>
+            {% else %}
+            <li class="disabled"><span class="page-link">&laquo;</span></li>
+            {% endif %}
+
+            {% for i in results.paginator.page_range %}
+                {% if i == results.number %}
+                <li class="page-item active"><span class="page-link">{{i}}</span></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{i}}&query={{query}}">{{i}}</a></li>
+            {% endif %}
+
+            {% endfor %}
+
+            {% if results.has_next %}
+            <li class="page-item"><a class="page-link" href="?query={{query}}&page={{results.next_page_number}}">&raquo;</a></li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            {% endif %} 
+        </ul>
+    </div>
+    {% endif %}
+    
+
 
 {% endblock content %}
