@@ -3,7 +3,7 @@
     border-radius: 3px;
     padding: 1em;
     margin: 1em;
-    max-height: 10em;
+    min-height: 10em;
 }
 
 .booking * {
@@ -28,6 +28,7 @@
     color: rgb(31, 29, 24);
     font-weight: bold;
 }
+
 
 .booking a:hover {
     text-decoration: none;
@@ -59,4 +60,22 @@
 td{
     border: 1px solid black;
     padding: 0.6em;
+}
+
+.top-level-img {
+    width: 100%;
+}
+
+.main {
+    min-height: 57.9vh;
+}
+
+#cansel {
+    margin-left: 4em;
+}
+
+@media screen and (max-width: 217px ) {
+    #cansel {
+        margin-left: 0;
+    }
 }

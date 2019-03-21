@@ -27,8 +27,8 @@ def sixteen_by_nine(width, height):
 
 # hostel compound
 class Hostel(models.Model):
-    name = models.CharField(max_length=400, help_text='Preferred name of the premises')
-    slug = models.SlugField(blank=True)
+    name = models.CharField(max_length=400, help_text='Preferred name of the premises', unique=True)
+    slug = models.SlugField(blank=True, unique=True)
     location = models.CharField(max_length=400, help_text='Where is it found')
     institution = models.CharField(
         max_length=400,
@@ -227,6 +227,7 @@ class Booking(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, help_text='Enter your preferred name')
     phone_number = models.CharField(max_length=10, help_text='Enter phone number')
+    cleared = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     objects = models.Manager()
 
@@ -240,3 +241,9 @@ class Booking(models.Model):
         self.room.available = True
         self.room.save()
         return super().delete()
+
+    def staff_url(self):
+        return reverse('booking', args=[str(self.pk)])
+
+    def delete_url(self):
+        return reverse('booking-delete', args=[str(self.pk)])

@@ -35,10 +35,23 @@
             </tbody>
         </table>
         
-        <form action="" method="POST" class="form-inline" role="form">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Clear booking</button>
-        </form>
+        <div class="row">
+            {% if booking.cleared %}
+                <h2>This booking has been cleared</h2>
+            {% else %}
+            <div class='col-md-4'>
+                <h3>Clearing booking as cleared means you have contacted the client and provided the information on the landlord</h3>
+                <form action="" method="POST" class="form-inline" role="form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning">Clear booking</button>
+                </form>
+            </div>
+            {% endif %}
+            <div class='col-md-4'>
+                <h3>Deleting booking will effectively delete the booking and <strong>MARK THE ROOM AS AVAILABLE</strong> Not Recommended!</h3>
+                <a href="{{ booking.delete_url}}" class="btn btn-danger">Delete booking</a>
+            </div>
+        </div>
         
     </div>
 </div>

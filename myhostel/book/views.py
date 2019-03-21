@@ -1,5 +1,6 @@
 from django.views import generic, View
 from django.shortcuts import get_object_or_404, render, redirect, reverse
+from django.urls import reverse_lazy
 from django.http import Http404
 from django.contrib import messages
 from django.db.models import Q
@@ -213,9 +214,16 @@ class BookingDetail(generic.DetailView):
             raise Http404
         else:
             booking = get_object_or_404(Booking, pk=kwargs['pk'])
-            booking.delete()
+            booking.cleared = True
+            booking.save()
             messages.add_message(request, messages.INFO, 'Booking cleared')
             return redirect(reverse('booking-list'))
+
+
+class BookingDelete(generic.DeleteView):
+    model = Booking
+    success_url = reverse_lazy('booking-list')
+    template_name = 'book/booking_confirm_delete.html'
 
 
 # search action

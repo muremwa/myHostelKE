@@ -1,0 +1,34 @@
+{% extends "home/base.html" %}
+{% load staticfiles %}
+{% block title %}Confirm delete booking{% endblock title %}
+{% block style %}<link rel="stylesheet" type="text/css" href="{% static 'book/css/booking.css' %}">{% endblock style %}
+
+
+{% block staff %}active{% endblock staff %}
+{% block crumb %}
+<li class="breadcrumb-item"><a href="{% url 'staff' %}">Staff Actions</a></li>
+<li class="breadcrumb-item"><a href="{% url 'booking-list' %}">bookings</a></li>
+<li class="breadcrumb-item"><a href="{{ booking.staff_url}}">Booking by {{ booking.name }}</a></li>
+<li class="breadcrumb-item">Delete?</li>
+{% endblock crumb %}
+
+{% block content %}
+    <div class="container text-center">
+        <div>
+            <h2 style="margin-bottom: 1em;">Delete booking by "{{ booking.name }}"</h2>
+            <div style="margin-top: 2em;" class="alert alert-warning">Are you sure you want to delete the booking for "{{ booking.name }}"? <br />This is only advisable if <strong>"{{ booking.name }}"</strong> does not want the room anymore</div>
+        </div>
+
+        {% if booking.cleared %}
+            <div class="alert alert-warning">This booking was already cleared. Are you sure you want to make the room associated with it available?</div>
+        {% endif %}
+        <hr>
+        <div class="alert alert-warning">By deleting this booking you mark the room "{{ booking.room }}" as available</div>
+
+        <form style="margin-top: 2em;" method="post" action="">
+            {% csrf_token %}
+            <input type="submit" value="Yes, Delete" class="btn btn-danger">
+            <a href="{{booking.staff_url}}" id='cansel' class="btn btn-success">Cancel</a>
+        </form>
+    </div>
+{% endblock content %}

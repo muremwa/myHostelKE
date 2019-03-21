@@ -26,6 +26,9 @@ urlpatterns = [
     # staff-actions/booking/4/
     path('staff-actions/bookings/<int:pk>/', book_views.BookingDetail.as_view(), name="booking"),
 
+    # staff-actions/booking/4/delete/
+    path('staff-actions/bookings/<int:pk>/delete/', book_views.BookingDelete.as_view(), name="booking-delete"),
+
     # specify-school/
     path('specify-school/', action_views.add_school, name="specify"),
 
@@ -41,6 +44,3 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-# TODO: add adding hostel and room page, booking viewing pages, room restore page, a search functionality(by area,
-# TODO: hostel, university) and a FAQs page.
