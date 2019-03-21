@@ -77,7 +77,7 @@ class Hostel(models.Model):
         try:
             img = self.hostelimage_set.filter(is_main=True)[0].file.url
         except IndexError:
-            img = '/media/hostel/default_hostel.jpg'
+            img = '/media/defaults/default_hostel.jpg'
         return img
 
     def get_absolute_url(self):
@@ -154,13 +154,9 @@ class Room(models.Model):
             # room types
             self.hostel.increment_room_type(self.house_type)
             # save hostel
-            self.hostel.save()
             self.tallied = True
-        else:
-            if self.available:
-                self.hostel.available_rooms += 1
-                self.hostel.increment_room_type(self.house_type)
-                self.hostel.save()
+            self.hostel.save()
+            
         return super().save(args, kwargs)
 
     def delete(self, *args, **kwargs):
@@ -175,7 +171,7 @@ class Room(models.Model):
         try:
             img = self.roomimage_set.filter(is_main=True)[0].file.url
         except IndexError:
-            img = '/media/rooms/default_room.png'
+            img = '/media/defaults/default_room.png'
         return img
 
     def get_house_type(self):
@@ -197,7 +193,7 @@ class Room(models.Model):
 
 
 def upload_room_to(instance, filename):
-    return "hostel/{}/{}/{}".format(instance.room.hostel.name, instance.room.room_number, filename)
+    return "hostel/{}/rooms/{}/{}".format(instance.room.hostel.slug, instance.room.room_number, filename)
 
 
 class RoomImage(models.Model):
@@ -222,7 +218,7 @@ class RoomImage(models.Model):
 
 
 def upload_hostel_to(instance, filename):
-    return 'hostel/{}/images/{}'.format(instance.hostel.name, filename)
+    return 'hostel/{}/images/{}'.format(instance.hostel.slug, filename)
 
 
 class HostelImage(models.Model):
@@ -264,7 +260,10 @@ class Booking(models.Model):
 
     def delete(self, using=None, keep_parents=False):
         self.room.available = True
+        self.room.hostel.available_rooms += 1
         self.room.save()
+        self.hostel.increment_room_type(self.room.house_type(self.room.house_type))
+        self.hostel.save()
         return super().delete()
 
     def clear(self):

@@ -45,10 +45,10 @@ class HostelModelTestCase(TestCase):
     @tag('main-img')
     def test_main_image(self):
         # get a main image or default image
-        self.assertEqual(self.hostel_1.get_main_image(), '/media/hostel/default_hostel.jpg')
+        self.assertEqual(self.hostel_1.get_main_image(), '/media/defaults/default_hostel.jpg')
         # create new hostel image and receive it instead of default
         self.img_1_1.save()
-        self.assertEqual(self.hostel_1.get_main_image(), '/media/hostel/hostel_the-crud.jpg')
+        self.assertEqual(self.hostel_1.get_main_image(), '/media/hostel/{}/images/new.jpg'.format(self.hostel_1.slug))
         self.img_1_1.delete()
 
     @tag('room-overall')
@@ -78,15 +78,16 @@ class HostelModelTestCase(TestCase):
     def test_room_img(self):
         # default image should be returned
         self.room_1_1.save()
-        self.assertEqual(self.room_1_1.get_main_image(), '/media/rooms/default_room.png')
-        print('Default image okay')
+        self.assertEqual(self.room_1_1.get_main_image(), '/media/defaults/default_room.png')
+        self.image_mock.name = 'room.jpg'
         self.img_room_1_1 = RoomImage(
             room=self.room_1_1,
             file=self.image_mock,
             is_main=True
         )
         self.img_room_1_1.save()
-        name = "room_{}.jpg".format(self.room_1_1.room_number)
-        self.assertEqual(self.room_1_1.get_main_image(), '/media/rooms/{}'.format(name))
-        print('New image okay')
+        self.assertEqual(self.room_1_1.get_main_image(), '/media/hostel/{}/rooms/{}/room.jpg'.format(
+            self.room_1_1.hostel.slug,
+            self.room_1_1.room_number,
+        ))
         self.img_room_1_1.delete()

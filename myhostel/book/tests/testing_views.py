@@ -13,21 +13,18 @@ class BookViewsTestCase(TestCase):
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home/home.html')
-        print('home okay')
 
     @tag('staff-home')
     def test_home_staff(self):
         # return 404
         response = self.client.get(reverse('staff'))
         self.assertEqual(response.status_code, 404)
-        print('home staff okay')
 
     @tag('specify')
     def test_specify(self):
         # 200 + a 302 for post
         response = self.client.get(reverse('specify'))
         self.assertEqual(response.status_code, 200)
-        print('specify okay')
 
 
 # higher views
@@ -198,4 +195,16 @@ class BookingTestCase(TestCase):
 
     @tag('book')
     def test_book(self):
-        pass
+        data = {
+            'name': 'Tester',
+            'phone_number': '0787277823'
+        }
+        url = self.room_3.booking_url()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'book/now.html')
+
+        # post
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'book/success_booking.html')
