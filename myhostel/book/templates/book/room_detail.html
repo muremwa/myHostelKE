@@ -26,8 +26,8 @@
             <p>{{ room.get_house_type }} at Ksh. {{ room.price }} monthly</p>   
 
             <div id="action-buttons" class="row">
-                <div class="col-6"><a href="{% url 'book:now' room.hostel.slug room.room_number %}" class="btn btn-outline-dark">book now</a></div>
-                <div class="col-6"><a href="{% url 'book:hostel' room.hostel.slug %}" class="btn btn-outline-dark">explore {{ room.hostel.name }}</a></div>
+                <div class="col-6"><a href="{{room.booking_url}}" class="btn btn-outline-dark">book now</a></div>
+                <div class="col-6"><a href="{{room.hostel.get_absolute_url}}" class="btn btn-outline-dark">explore {{ room.hostel.name }}</a></div>
             </div>    
             {% if user.is_staff %}
                 <div style="margin: 5em;" class="">
