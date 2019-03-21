@@ -193,8 +193,8 @@ class BookingTestCase(TestCase):
     @tag('room-detail')
     def test_room_detail(self):
         # return 200
-        # book it and check if it returns 404
-        pass
+        response = self.client.get(self.room_3.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
 
     @tag('book')
     def test_book(self):

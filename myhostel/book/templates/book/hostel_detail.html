@@ -76,18 +76,7 @@
         <div class="row">
             {% for room in hostel.room_set.all %}
                 {% if room.available %}
-                    <div class="card room">
-                        <a href="{% url 'book:room' hostel.slug room.room_number %}"><img src="{{ room.get_main_image }}" alt="image of a room" class="card-img-top"></a>
-                        <div class="card-body">
-                            <h4 class="card-text room-type">{{ room.get_house_type }}</h4>
-                            <div class="row">
-                                <p class="col-sm-8">Ksh.{{room.price}} per month</p>
-                                <div class="col-sm-4">
-                                    <a class="book-ico" href="{% url 'book:now' hostel.slug room.room_number %}"><img data-toggle="tooltip" data-placement="left" title="book this room at Ksh.{{ room.price }} monthly" style="height: 40%;" src="{% static 'svg/book.svg' %}" alt=""></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {% include "book/room.html" %}
                 {% endif %}
             {% endfor %}
         </div>
@@ -121,9 +110,17 @@
         <div class="container col-md-7 text-center"><h2>no suggestions for more hostels</h2></div>
     {% endif %}
 
+    <hr class="main-divider">
 
-    
-
+    <!-- Booked Rooms in the hostel -->
+    <h2 class="text-center">These rooms are not available for booking</h2>
+        <div class="row">
+            {% for room in hostel.room_set.all %}
+                {% if not room.available %}
+                    {% include "book/room.html" %}
+                {% endif %}
+            {% endfor %}
+        </div>  
 
 </div>
 

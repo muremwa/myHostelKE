@@ -1,0 +1,18 @@
+{% load staticfiles %}
+
+<div class="card room">
+    <a href="{% url 'book:room' hostel.slug room.room_number %}"><img src="{{ room.get_main_image }}" alt="image of a room" class="card-img-top"></a>
+    <div class="card-body">
+        <h4 class="card-text room-type">{{ room.get_house_type }}</h4>
+        <div class="row">
+            <p class="col-sm-8">Ksh.{{room.price}} per month</p>
+            <div class="col-sm-4">
+                {% if room.available %}
+                <a class="book-ico" href="{% url 'book:now' hostel.slug room.room_number %}"><img data-toggle="tooltip" data-placement="left" title="book this room at Ksh.{{ room.price }} monthly" style="height: 40%;" src="{% static 'svg/book.svg' %}" alt=""></a>
+                {% else %}
+                <span>Booked</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

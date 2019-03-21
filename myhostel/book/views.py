@@ -106,14 +106,10 @@ class RoomDetail(View, Retriever):
     def get(self, request, *args, **kwargs):
         room = get_object_or_404(Room, room_number=kwargs['room_number'])
 
-        # if room is booked it will return a 404 error
-        if room.available:
-            return render(request, 'book/room_detail.html', {
-                'room': room,
-                'school': self.retrieve_school()
-            })
-        else:
-            raise Http404
+        return render(request, 'book/room_detail.html', {
+            'room': room,
+            'school': self.retrieve_school()
+        })
 
 
 class RoomBooking(View, Retriever):
