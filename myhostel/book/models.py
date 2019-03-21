@@ -45,6 +45,10 @@ class Hostel(models.Model):
         help_text='Enter price range in the following format \'KSH 4500 - KSH 6000\''
     )
     views = models.IntegerField(default=0)
+    bs = models.IntegerField(default=0)
+    one = models.IntegerField(default=0)
+    two = models.IntegerField(default=0)
+    sr = models.IntegerField(default=0)
     objects = models.Manager()
 
     class Meta:
@@ -95,6 +99,30 @@ class Hostel(models.Model):
                 res_.append(item)
         return res_
 
+    def increment_room_type(self, room_type):
+        room_type = str(room_type)
+        if room_type == "BS":
+            self.bs += 1
+        elif room_type == "SR":
+            self.sr += 1
+        elif room_type == "1B":
+            self.one += 1
+        elif room_type == '2B':
+            self.two += 1
+        self.save()
+
+    def decrement_room_type(self, room_type):
+        room_type = str(room_type)
+        if room_type == "BS":
+            self.bs -= 1
+        elif room_type == "SR":
+            self.sr -= 1
+        elif room_type == "1B":
+            self.one -= 1
+        elif room_type == '2B':
+            self.two -= 1
+        self.save()
+
 
 # rooms
 class Room(models.Model):
@@ -129,12 +157,17 @@ class Room(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.tallied:
+            # all available rooms
             self.hostel.available_rooms += 1
+            # room types
+            self.hostel.increment_room_type(self.house_type)
+            # save hostel
             self.hostel.save()
             self.tallied = True
         else:
             if self.available:
                 self.hostel.available_rooms += 1
+                self.hostel.increment_room_type(self.house_type)
                 self.hostel.save()
         return super().save(args, kwargs)
 
@@ -241,6 +274,10 @@ class Booking(models.Model):
         self.room.available = True
         self.room.save()
         return super().delete()
+
+    def clear(self):
+        self.cleared = True
+        self.save()
 
     def staff_url(self):
         return reverse('booking', args=[str(self.pk)])
