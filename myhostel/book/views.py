@@ -244,20 +244,26 @@ class Search(generic.TemplateView, Retriever):
         return results.filter(available_rooms__gt=0).order_by('-available_rooms')
 
     @staticmethod
-    def price_search(range_of_price, school):
+    def price_search(range_of_price, school, **kwargs):
         # split the query term eg '4000-8000' as [4000, 8000] and search the price range of the hostels that
         # have price ranges between the two. Hostel class has a method to split its price range
         hostels = Hostel.objects.filter(available_rooms__gt=0).order_by('-available_rooms')
         if school:
             hostels = hostels.filter(institution=school)
         res = []
-        from_ = range_of_price.split("-")[0]
-        to_ = range_of_price.split("-")[-1]
+        if kwargs['below']:
+            for hostel in hostels:
+                r = hostel.get_prices()
+                if int(range_of_price) < r[-1]:
+                    res.append(hostel)
+        else:
+            from_ = int(range_of_price.split("-")[0])
+            to_ = int(range_of_price.split("-")[-1])
 
-        for hostel in hostels:
-            r = hostel.get_prices()
-            if from_ >= r[0] and to_ <= r[-1]:
-                res.append(hostel)
+            for hostel in hostels:
+                r = hostel.get_prices()
+                if r[0]>=from_ and r[-1]<=to_:
+                    res.append(hostel)
 
         return res
 
@@ -268,7 +274,7 @@ class Search(generic.TemplateView, Retriever):
         term = None
         results = []
 
-        price = ["PRICE", "RENT", "MONTHLY"]
+        price = ["PRICE", "RENT", "MONTHLY", "BELOW"]
         institution = ["UNIVERSITY", "CAMPUS", "SCHOOL", "COLLEGE", "INSTITUTION", "VARSITY", "AT"]
         location = ["PLACE", "IN", "WHERE", "LOCATED"]
         house_types = ["BEDROOM", ]
@@ -278,8 +284,11 @@ class Search(generic.TemplateView, Retriever):
 
         if field in price:
             # price searches
+            below = False
             term = 'price'
-            results = self.price_search(look_up, school)
+            if field == price[-1]:
+                below = True
+            results = self.price_search(look_up, school, below=below)
 
         elif field in institution:
             # school search

@@ -88,7 +88,7 @@ class Hostel(models.Model):
         res_ = []
         for item in res:
             if item.isdigit():
-                res_.append(item)
+                res_.append(int(item))
         return res_
 
     def increment_room_type(self, room_type):
@@ -262,8 +262,8 @@ class Booking(models.Model):
         self.room.available = True
         self.room.hostel.available_rooms += 1
         self.room.save()
-        self.hostel.increment_room_type(self.room.house_type(self.room.house_type))
-        self.hostel.save()
+        self.room.hostel.increment_room_type(self.room.house_type)
+        self.room.hostel.save()
         return super().delete()
 
     def clear(self):
