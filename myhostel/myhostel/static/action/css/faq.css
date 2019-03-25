@@ -7,10 +7,10 @@
     min-height: 36vh;
 }
 
-.response-text {
-    width: 80%;
+.response {
+    width: 70%;
     margin: auto;
-    text-align: justify;
+    /* text-align: justify; */
 }
 
 .response {
@@ -29,7 +29,7 @@
     .faq {
         width: 75%;
     }
-    .response-text {
+    .response {
         width: 85%;
     }    
 }
@@ -38,7 +38,7 @@
     .faq {
         width: 80%;
     }
-    .response-text {
+    .response {
         width: 100%;
     } 
     

@@ -12,14 +12,14 @@
             <!-- Top information -->
             <div class="main-area">
                 <h1>myHostelKenya</h1>
-                <p class="lead top-text">Welcome to myHostelKenya. The website that makes it easier to book private living space in your school. <a href="{% url 'book:index' %}">Explore</a> hostels now or search below</p>
+                <p class="lead top-text">Welcome to myHostelKenya. The website that makes it easier to book private living space in your school. <a href="{% url 'book:index' %}">Explore</a> hostels now or search below. <br/> From the comfort of you home or wherever you are you can book a room from the private residentials close to your institution. No more stress when a semester is about to begin. <a href="/help/faq/how-does-the-site-work/">Learn</a> more on how the site works</p>
             </div>
 
             <!-- Main search bar -->
             <div id="main-search-bar">
 
                 <form id="main-search-bar-form" method="GET" action="{% url 'book:search' %}" class="form-inline">
-                    <input id="main-search-bar-form-input" class="form-control mr-sm-4" type="search" name="query" value="{{ query }}" placeholder="Search for hostels" aria-label="Search">
+                    <input id="main-search-bar-form-input" autofocus class="form-control mr-sm-4" type="search" name="query" value="{{ query }}" placeholder="Search for hostels" aria-label="Search">
                     <button id="main-search-bar-form-btn" class="btn btn-dark my-2 my-sm-0" type="submit">Search</button>
                 </form>
 

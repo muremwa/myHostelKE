@@ -17,7 +17,11 @@
     <div class="container">
 
         <div class="header text-center">
-            <h1>Frequently Asked Questions</h1>
+            {% if faqs %}
+                <h1>Frequently Asked Questions</h1>
+            {% else %}
+                <h1>Nothing is published yet</h1>
+            {% endif %}
         </div>
 
         <hr>
@@ -27,7 +31,7 @@
             {% for faq in faqs %}
             <div class="faq">
                 <h3 class="faq-list-title">{{faq.question}}</h3>
-                <p>{{ faq.response|truncatechars:200 }}...<a href="{{faq.get_absolute_url}}">read more</a></p>
+                <p>{{ faq.response|safe|truncatechars:200 }}...<a href="{{faq.get_absolute_url}}">read more</a></p>
             </div>
             <hr>
             {% endfor %}
