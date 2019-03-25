@@ -25,15 +25,33 @@ def add_school(request):
             request.session['school'] = None
             school = request.session['school']
 
+        try:
+            cookie = request.session['cookie']
+        except KeyError:
+            request.session['cookie'] = False
+            cookie = request.session['cookie']
+
         return render(request, 'action/specify.html', {
             'schools': schools,
             'school': school,
+            'cookie': cookie,
         })
 
 
 def remove_school(request):
     request.session['school'] = None
-    return redirect(reverse('book:index'))
+    to = request.GET.get('next')
+    if not to:
+        to = '/'
+    return redirect(to)
+
+
+def accept_cookies(request):
+    request.session['cookie'] = True
+    to = request.GET.get('next')
+    if not to:
+        to = '/'
+    return redirect(to)
 
 
 # all frequently asked questions
@@ -49,6 +67,7 @@ class FaqList(generic.ListView, Retriever):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
         context['school'] = self.retrieve_school()
+        context['cookie'] = self.retrieve_cookie()
         return context
 
 
@@ -65,6 +84,7 @@ class FaqDetail(generic.DetailView, Retriever):
         if not context['faq'].publish:
             raise Http404('The FAQ item you requested is not published yet')
 
-        # add school to context
+        # add school and cookie to context
         context['school'] = self.retrieve_school()
+        context['cookie'] = self.retrieve_cookie()
         return context

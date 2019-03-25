@@ -22,6 +22,14 @@ class Retriever:
             school = self.request.session['school']
         return school
 
+    def retrieve_cookie(self):
+        try:
+            cookie = self.request.session['cookie']
+        except KeyError:
+            self.request.session['cookie'] = False
+            cookie = self.request.session['cookie']
+        return cookie
+
 
 class Home(generic.TemplateView, Retriever):
     template_name = "home/home.html"
@@ -29,6 +37,7 @@ class Home(generic.TemplateView, Retriever):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['school'] = self.retrieve_school()
+        context['cookie'] = self.retrieve_cookie()
         return context
 
 
@@ -61,6 +70,7 @@ class Index(generic.ListView, Retriever):
         context['school'] = self.retrieve_school()
         context['recent_searches'] = list(reversed(recent))
         context['popular'] = self.popular_hostels()
+        context['cookie'] = self.retrieve_cookie()
         return context
 
 
@@ -99,6 +109,7 @@ class HostelDetail(generic.DetailView, Retriever):
             self.request.session['seen'] = seen
         context['hostel'].save()
         context['school'] = self.retrieve_school()
+        context['cookie'] = self.retrieve_cookie()
         return context
 
 
@@ -123,6 +134,7 @@ class RoomBooking(View, Retriever):
             raise Http404
 
         return render(request, self.template, {
+            'cookie': self.retrieve_cookie(),
             'school': self.retrieve_school(),
             'room': room,
             'form': self.form
@@ -159,6 +171,7 @@ class RoomBooking(View, Retriever):
         return render(request, 'book/success_booking.html', {
             'room': room,
             'school': self.retrieve_school(),
+            'cookie': self.retrieve_cookie(),
         })
 
 
@@ -178,11 +191,12 @@ class StaffActions(generic.TemplateView, Retriever):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['school'] = self.retrieve_school()
+        context['cookie'] = self.retrieve_cookie()
         return context
 
 
 # booking list
-class BookingList(generic.ListView):
+class BookingList(generic.ListView, Retriever):
     model = Booking
     template_name = 'book/bookings_list.html'
     context_object_name = 'bookings'
@@ -197,9 +211,15 @@ class BookingList(generic.ListView):
     def get_queryset(self):
         return Booking.objects.all().order_by('cleared')
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context['school'] = self.retrieve_school()
+        context['cookie'] = self.retrieve_cookie()
+        return context
+
 
 # booking detail
-class BookingDetail(generic.DetailView):
+class BookingDetail(generic.DetailView, Retriever):
     model = Booking
     template_name = "book/booking.html"
     context_object_name = 'booking'
@@ -209,6 +229,12 @@ class BookingDetail(generic.DetailView):
             raise Http404
         else:
             return super().get(request, args, kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['school'] = self.retrieve_school()
+        context['cookie'] = self.retrieve_cookie()
+        return context
 
     @staticmethod
     def post(request, *args, **kwargs):
@@ -221,10 +247,16 @@ class BookingDetail(generic.DetailView):
             return redirect(reverse('booking-list'))
 
 
-class BookingDelete(generic.DeleteView):
+class BookingDelete(generic.DeleteView, Retriever):
     model = Booking
     success_url = reverse_lazy('booking-list')
     template_name = 'book/booking_confirm_delete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['school'] = self.retrieve_school()
+        context['cookie'] = self.retrieve_cookie()
+        return context
 
 
 # search action
@@ -402,4 +434,5 @@ class Search(generic.TemplateView, Retriever):
             'advanced_field': ad_search_term,
             'advanced_lookup': ad_search_term_l,
             'count_results': count,
+            'cookie': self.retrieve_cookie(),
         })
