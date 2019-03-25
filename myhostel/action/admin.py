@@ -8,7 +8,12 @@ class FaqAdmin(admin.ModelAdmin):
         ('Question', {'fields': ['question', ]}),
         ('Response', {'fields': ['response', ]})
     ]
-    list_display = ['question']
+    list_display = ['question', 'publish']
+    actions = ['publish',]
+
+    def publish(self, request, queryset):
+        queryset.update(publish=True)
+        self.message_user(request, "Article(s) were published")
 
 
 admin.site.register(Faq, FaqAdmin)

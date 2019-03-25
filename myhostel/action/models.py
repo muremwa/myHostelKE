@@ -12,9 +12,10 @@ class PopularSearches(models.Model):
 
 
 class Faq(models.Model):
-    question = models.CharField(max_length=400)
+    question = models.CharField(max_length=400, unique=True)
     response = models.TextField(help_text="Enter a detailed explanation")
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
+    publish = models.BooleanField(default=False)
     objects = models.Manager()
 
     def __str__(self):

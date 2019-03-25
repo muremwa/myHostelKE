@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from django.views import generic
+from django.http import Http404
 
 from book.models import Hostel
 from book.views import Retriever
@@ -42,6 +43,9 @@ class FaqList(generic.ListView, Retriever):
     template_name = 'action/faq_list.html'
     paginate_by = 15
 
+    def get_queryset(self):
+        return Faq.objects.filter(publish=True)
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
         context['school'] = self.retrieve_school()
@@ -57,5 +61,10 @@ class FaqDetail(generic.DetailView, Retriever):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
+        # raise 404 if article is not published
+        if not context['faq'].publish:
+            raise Http404('The FAQ item you requested is not published yet')
+
+        # add school to context
         context['school'] = self.retrieve_school()
         return context
