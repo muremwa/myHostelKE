@@ -254,11 +254,19 @@ class Search(generic.TemplateView, Retriever):
         if kwargs['below']:
             for hostel in hostels:
                 r = hostel.get_prices()
-                if int(range_of_price) < r[-1]:
+                try:
+                    new_pr_range = int(range_of_price)
+                except ValueError:
+                    return res
+
+                if new_pr_range >= r[0] and r[-1] >= new_pr_range:
                     res.append(hostel)
         else:
-            from_ = int(range_of_price.split("-")[0])
-            to_ = int(range_of_price.split("-")[-1])
+            try:
+                from_ = int(range_of_price.split("-")[0])
+                to_ = int(range_of_price.split("-")[-1])
+            except ValueError:
+                return res
 
             for hostel in hostels:
                 r = hostel.get_prices()
