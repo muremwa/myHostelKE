@@ -194,6 +194,9 @@ class BookingList(generic.ListView):
         else:
             return super().get(request, args, kwargs)
 
+    def get_queryset(self):
+        return Booking.objects.all().order_by('cleared')
+
 
 # booking detail
 class BookingDetail(generic.DetailView):
