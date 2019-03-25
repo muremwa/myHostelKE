@@ -7,7 +7,7 @@
     color: black;
 }
 
-#main-image {
+#big-image {
     width: 100%;
 }
 
@@ -33,3 +33,29 @@
     margin-top: 0.8em;
 }
 
+.btn {
+    overflow: hidden;
+}
+
+@media only screen and (max-width: 767px) {
+    .room-image {
+        width: 30%;
+    }
+}
+
+@media only screen and (max-width: 474px) {
+    .room-image {
+        width: 70%;
+        margin: auto;
+    }
+    #more-img {
+        text-align: center;
+    }
+}
+
+@media only screen and (max-width: 330px) {
+    .room-image {
+        width: 90%;
+    }
+
+}

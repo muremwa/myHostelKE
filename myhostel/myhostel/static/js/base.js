@@ -54,7 +54,7 @@ function enlargeImages (i) {
 }
 
 $(document).on('click', '.over-js-img', function () {
-    if (window.innerWidth < 700) {
+    if (window.innerWidth < 768) {
         changeBigImage(this);
     } else {
         enlargeImages(this);
@@ -70,6 +70,7 @@ function allImages () {
         }
         
     }
+    t.push(mainImg.src);
     maxI = t.length-1;
     return t;
 }

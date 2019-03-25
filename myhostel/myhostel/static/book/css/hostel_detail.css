@@ -68,10 +68,16 @@
     color: aliceblue;
 }
 
-@media screen and ( max-width: 574px){
+@media screen and ( max-width: 575px){
     .book-ico img {
         width: 5em;
         height: 5em;
+    }
+    .image-div-hostel {
+        width: 30%;
+    }
+    #small-row {
+        display: flex;
     }
 }
 
@@ -79,5 +85,16 @@
     .room {
         width: 80%;
         margin-left: 13%;
+    }
+}
+
+@media screen and ( max-width: 363px){
+    .image-div-hostel {
+        width: 80%;
+        margin: auto;
+        margin-top: 10px;
+    }
+    #small-row {
+        display: block;
     }
 }

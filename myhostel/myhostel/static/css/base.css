@@ -159,22 +159,22 @@ ul, ol {
 
 @media screen and ( max-width: 977px){
     #over-view-image-div {
-        width: 82%;
+        width: 88%;
     }
 
     #over-view-image {
-        height: 80%;
+        height: 90%;
         margin-top: 5em;
     }
 }
 
 @media screen and ( max-width: 848px){
     #over-view-image-div {
-        width: 70%;
+        width: 85%;
     }
 
     #over-view-image {
-        height: 60%;
+        height: 85%;
     }
 }
 

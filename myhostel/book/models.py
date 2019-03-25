@@ -115,6 +115,12 @@ class Hostel(models.Model):
             self.two -= 1
         self.save()
 
+    def all_available_rooms(self):
+        return self.room_set.filter(available=True)
+
+    def all_unavailable_rooms(self):
+        return self.room_set.filter(available=False)
+
 
 # rooms
 class Room(models.Model):

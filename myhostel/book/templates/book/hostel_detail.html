@@ -33,18 +33,20 @@
                 <span id="locate-pin"><img src="{% static 'svg/place.svg' %}" alt="place ico"> {{ hostel.location}}</span>
             </div>
 
+            {% if hostel.hostelimage_set.all.count > 1  %}
             <h2 class="text-center">more images for {{ hostel.name }}</h2>
             <hr>
 
             <div class="row" id="small-row">
                 {% for image in hostel.hostelimage_set.all %}
                     {% if not image.is_main %}
-                        <div class="col-md-4">
+                        <div class="col-sm-4 image-div-hostel">
                             <img data-toggle="tooltip" data-placement="top" title="click to enlarge" src="{{ image.file.url }}" alt="" class="other-hostel-images small-images over-js-img">
                         </div>                    
                     {% endif %}
                 {% endfor %}
-            </div>
+            </div>            
+            {% endif %}
 
             <div class="info">
                 <h3>features</h3>
@@ -64,6 +66,7 @@
         </div>
     </div>
 
+    {% if hostel.all_available_rooms %}
     <hr class="main-divider">
 
     <div style="color: #4a4c64;" class="available-rooms">
@@ -74,14 +77,15 @@
 
         <!-- Rooms in the hostel -->
         <div class="row">
-            {% for room in hostel.room_set.all %}
-                {% if room.available %}
-                    {% include "book/room.html" %}
-                {% endif %}
+            {% for room in hostel.all_available_rooms %}
+                {% include "book/room.html" %}
             {% endfor %}
         </div>
 
-    </div>
+    </div>    
+    {% else %}
+        <h2 class="text-center">{{ hostel}} has no rooms available rooms for booking</h2>
+    {% endif %}
 
     <hr class="main-divider">
 
@@ -106,21 +110,18 @@
                 {% endfor %}
             </div>
         </div>
-    {% else %} 
-        <div class="container col-md-7 text-center"><h2>no suggestions for more hostels</h2></div>
     {% endif %}
 
-    <hr class="main-divider">
-
-    <!-- Booked Rooms in the hostel -->
-    <h2 class="text-center">These rooms are not available for booking</h2>
+    {% if hostel.all_unavailable_rooms %}
+        <hr class="main-divider">
+        <!-- Booked Rooms in the hostel -->
+        <h2 class="text-center">These rooms are not available for booking</h2>
         <div class="row">
-            {% for room in hostel.room_set.all %}
-                {% if not room.available %}
-                    {% include "book/room.html" %}
-                {% endif %}
+            {% for room in hostel.all_unavailable_rooms %}
+                {% include "book/room.html" %}
             {% endfor %}
         </div>  
+    {% endif %}
 
 </div>
 

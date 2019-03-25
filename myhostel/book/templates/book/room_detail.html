@@ -17,7 +17,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="top col-md-6">
-            <img id="main-image" src="{{ room.get_main_image }}" alt="">
+            <img id="big-image" src="{{ room.get_main_image }}" alt="">
         </div>
 
         <div class="info">
@@ -42,18 +42,20 @@
 
     <div class="more-info">
 
-        <h2>More images of {{ room.room_number }}</h2>
+        {% if room.roomimage_set.all.count > 1 %}
+        <h2 id="more-img">More images of {{ room.room_number }}</h2>
 
         <!-- more images -->
         <div class="row">
             {% for image in room.roomimage_set.all %}
                 {% if not image.is_main %}  
-                    <div class="col-sm-2 room-image">
+                    <div class="col-md-2 room-image">
                         <img class="small-images over-js-img" src="{{ image.file.url }}" alt="">
                     </div> 
                 {% endif %}
             {% endfor %}
         </div>
+        {% endif %}
     </div>
 
 </div>
