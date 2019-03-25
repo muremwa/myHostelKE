@@ -43,6 +43,7 @@ nav ol a:hover {
 
 footer {
     padding-top: 3em;
+    padding-bottom: 3em;
 }
 
 .context-dark, .bg-gray-dark, .bg-primary {
@@ -146,6 +147,16 @@ ul, ol {
     }
 }
 
+@media screen and ( max-width: 992px){
+    .nav-item {
+        margin: 10px;
+    }
+
+    #navbar > h1 {
+        margin-left: 30%;
+    }
+}
+
 @media screen and ( max-width: 977px){
     #over-view-image-div {
         width: 82%;
@@ -167,6 +178,13 @@ ul, ol {
     }
 }
 
+@media screen and ( max-width: 767px){
+    footer div {
+        margin: 10px;
+    }
+}
+
+
 @media screen and ( max-width: 740px){
     #over-view-image-div {
         width: 50%;
@@ -175,5 +193,32 @@ ul, ol {
     #over-view-image {
         height: 40%;
         margin-top: 13em;
+    }
+}
+
+@media screen and ( max-width: 569px){
+    #contacts h5, #contacts dt, #contacts dd, #more-foot h5, #more-foot li, #part-1 {
+        text-align: center;
+        margin: 14px;
+    }
+}
+
+@media screen and ( max-width: 528px){
+    #navbar > h1 {
+        margin-left: 20%;
+    }
+}
+
+
+@media screen and ( max-width: 373px){
+    #navbar > h1 {
+        margin-left: 5%;
+        font-size: 2em;
+    }
+}
+
+@media screen and ( max-width: 271px){
+    #navbar > h1 {
+        font-size: 1.4em;
     }
 }

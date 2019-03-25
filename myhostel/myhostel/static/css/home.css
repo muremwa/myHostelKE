@@ -8,7 +8,7 @@
 
 .new-main {
     margin-top: -6.5em;
-    height: 100vh;
+    min-height: 100vh;
     background-image: url('images/hostel.jpg');
     background-position: center;
     background-repeat: no-repeat;
@@ -66,6 +66,7 @@
 
 .learn-s a {
     color: aliceblue;
+    margin-bottom: 2em;
 }
 .learn-s a:hover {
     text-decoration: none;
@@ -74,7 +75,7 @@
 
 .important-info, .bottom-info{
     background-color: #7d8496;
-    height: 110vh;
+    min-height: 110vh;
     padding-top: 12em;
 }
 
@@ -221,5 +222,17 @@
     }
     .more-bu a {
         font-size: 1.2em;
+    }
+}
+
+@media screen and ( max-width: 275px){
+    html {
+        font-size: 10px;
+    }
+}
+
+@media screen and ( max-width: 229px){
+    .main-area > h1 {
+        font-size: 1em;
     }
 }

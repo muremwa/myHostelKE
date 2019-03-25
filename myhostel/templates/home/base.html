@@ -109,14 +109,14 @@
 <footer class="section footer-classic context-dark bg-image" style="background: #343a40;">
         <div class="container">
           <div class="row row-30">
-            <div class="col-md-4 col-xl-5">
+            <div class="col-md-4 col-xl-5" id='part-1'>
               <div class="pr-xl-4"><a class="brand" href=""><h7>myHostelKenya</h7></a>
                 <p>Search for private hostels in your Kenyan institution of choice. From Kisii University to the University of Nairobi.</p>
                 <!-- Rights-->
-                <p class="rights"><span>©  </span><span class="copyright-year">2019. </span><span>All Rights Reserved.</span></p>
+                <p class="rights"><span>©  </span><span class="copyright-year">2018 - <span id="c-y"></span>. </span><span>All Rights Reserved.</span></p>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4" id="contacts">
               <h5>Contacts</h5>
               <dl class="contact-list">
                 <dt>email:</dt>
@@ -128,17 +128,21 @@
                 </dd>
               </dl>
             </div>
-            <div class="col-md-4 col-xl-3">
+            <div class="col-md-4 col-xl-3" id="more-foot">
               <h5>Links</h5>
               <ul class="nav-list">
-                <li><a style="color: black;" href="#">About</a></li>
-                <li><a style="color: black;" href="#">Bug report</a></li>
-                <li><a style="color: black;" href="#">How to use this site</a></li>
+                <li><a style="color: black;" href="/help/faq/what-are-we/">About</a></li>
+                <li><a style="color: black;" href="/help/faq/how-to-search/">Learn how to search</a></li>
+                <li><a style="color: black;" href="/help/faq/how-does-the-site-work/">How to use this site</a></li>
               </ul>
             </div>
           </div>
         </div>
       </footer>
+      <script type="text/javascript">
+        var x = new Date();
+        document.getElementById('c-y').innerText = x.getFullYear();
+      </script>
 
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>

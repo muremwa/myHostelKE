@@ -11,7 +11,7 @@
 
 {% block content %}
 
-<div class="">
+<div class="search-parent">
     {% if results %}
         <div class="top text-center">
             <h2>Showing results for "{{ query }}"</h2>
@@ -151,7 +151,7 @@
     {% endif %}
 </div>
 
-
+    {% comment %} Results paginantion {% endcomment %}
     {% if results.has_other_pages %}
     <div class="container text-center">
         <div class="alert alert-info">

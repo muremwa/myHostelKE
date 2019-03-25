@@ -13,6 +13,10 @@
     font-size: 1.7em;
 }
 
+.search-parent {
+    min-height: 38.2vh;
+}
+
 .result * {
     color: rgb(87, 102, 102);
 }
@@ -38,7 +42,7 @@
 }
 
 .failed-search {
-    height: 48vh;
+    min-height: 48vh;
 }
 
 @media screen and ( max-width: 964px){
@@ -64,4 +68,30 @@
     .result {
         width: 90%;
     }
+}
+
+@media screen and ( max-width: 575px){
+    .more-result-info > .row div {
+       text-align: left;
+       margin-left: 0;
+       margin: 5px;
+    }
+
+    .more-result-info > .row > .text-center {
+        text-align: left !important;
+        margin-left: 20%;
+     }
+}
+
+
+@media screen and ( max-width: 300px){
+    .more-result-info > .row > .text-center {
+        margin-left: 5%;
+     }
+}
+
+@media screen and ( max-width: 240px){
+    .more-result-info > .row > .text-center {
+        margin-left: 0;
+     }
 }
