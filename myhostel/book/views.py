@@ -262,7 +262,7 @@ class Search(generic.TemplateView, Retriever):
 
             for hostel in hostels:
                 r = hostel.get_prices()
-                if r[0]>=from_ and r[-1]<=to_:
+                if r[0] >= from_ and r[-1] <= to_:
                     res.append(hostel)
 
         return res
