@@ -65,7 +65,7 @@ class HostelModelTestCase(TestCase):
     @tag('prices')
     def test_prices_range(self):
         # should return [4500, 6000]
-        self.assertListEqual(self.hostel_1.get_prices(), ['4500', '6000'])
+        self.assertListEqual(self.hostel_1.get_prices(), [4500, 6000])
 
     @tag('url')
     def test_absolute_url(self):
