@@ -119,7 +119,8 @@ class RoomDetail(View, Retriever):
 
         return render(request, 'book/room_detail.html', {
             'room': room,
-            'school': self.retrieve_school()
+            'school': self.retrieve_school(),
+            'cookie': self.retrieve_cookie(),
         })
 
 
