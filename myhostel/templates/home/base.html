@@ -77,8 +77,8 @@
         <div class="alert alert-info text-center" id="cookie-warning">
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
           <strong>Privacy warning</strong> This site requires cookies to provide you with its services. By proceeding into this site you accept the use cookies.<br />
-          <a id="accept-cookie" href="{% url 'help:accept-cookie' %}?next=" class="btn btn-success">Accept</a>
-          <a href="" class="btn btn-warning">Decline</a>
+          <a id="accept-cookie" href="{% url 'help:accept-cookie' %}?next=" class="btn btn-success">I agree</a>
+          <a href="{% url 'help:faq' 'privacy-policy' %}" class="btn btn-link">Learn more</a>
         </div>
         <script>
           var acc = document.getElementById('accept-cookie');
@@ -147,6 +147,7 @@
                 <li><a style="color: black;" href="/help/faq/what-are-we/">About</a></li>
                 <li><a style="color: black;" href="/help/faq/how-to-search/">Learn how to search</a></li>
                 <li><a style="color: black;" href="/help/faq/how-does-the-site-work/">How to use this site</a></li>
+                <li><a style="color: black;" href="/help/faq/privacy-policy">Privacy Policy</a></li>
               </ul>
             </div>
           </div>
