@@ -138,6 +138,12 @@ ul, ol {
     margin-bottom: 2em;
 }
 
+#cookie-warning {
+    position: sticky;
+    z-index: 100;
+    bottom: 0;
+}
+
 @media screen and ( max-width: 1355px){
     html {
         font-size: 12px;
