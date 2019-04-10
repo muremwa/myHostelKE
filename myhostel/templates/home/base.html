@@ -24,7 +24,7 @@
                 <a class="nav-link {% block home %}{% endblock home %}" href="\">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {% block book %}{% endblock book %}" href="{% url 'book:index' %}">book</a>
+                <a class="nav-link {% block book %}{% endblock book %}" href="{% url 'book:index' %}">hostels</a>
               </li>
               {% if user.is_authenticated %}
                   {% if user.is_staff %}

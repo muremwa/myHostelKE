@@ -337,12 +337,12 @@ class Search(generic.TemplateView, Retriever):
         elif field in institution:
             # school search
             term = 'institution'
-            results = Hostel.objects.filter(institution__icontains=look_up).order_by('-available_rooms')
+            results = Hostel.objects.filter(available_rooms__gt=0).filter(institution__icontains=look_up).order_by('-available_rooms')
 
         elif field in location:
             # location search
             term = 'location'
-            results = Hostel.objects.filter(location__icontains=look_up).order_by('-available_rooms')
+            results = Hostel.objects.filter(available_rooms__gt=0).filter(location__icontains=look_up).order_by('-available_rooms')
             if school:
                 results = results.filter(institution=school)
 
@@ -369,7 +369,7 @@ class Search(generic.TemplateView, Retriever):
 
             else:
                 # if none defaults to basic search
-                results = self.basic_search(look_up, school)
+                results = []
 
             if school:
                 results = results.filter(institution__icontains=school)

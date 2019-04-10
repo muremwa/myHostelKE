@@ -3,6 +3,8 @@
 
 {% block title %}book {{ room }}{% endblock title %}
 
+{% block book %}active{% endblock book %}
+
 {% block crumb %}
 <li class="breadcrumb-item"><a href="{% url 'book:index' %}">hostels</a></li>
 <li class="breadcrumb-item"><a href="{% url 'book:hostel' room.hostel.slug  %}">{{ room.hostel.name }}</a></li>
