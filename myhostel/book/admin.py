@@ -29,7 +29,7 @@ class HostelAdmin(admin.ModelAdmin):
         ('Hostel Details', {'fields': ['name', 'location', 'institution', 'price_range']}),
         ('Info', {'fields': ['distance_from_admin', 'water', 'electricity']})
     ]
-    list_display = ['name', 'institution', 'distance_from_admin']
+    list_display = ['name', 'institution', 'distance_from_admin', 'all_rooms']
     list_filter = ['institution',]
     search_fields = ['institution', 'location', 'name']
     inlines = (HostelImageInline,)
@@ -41,6 +41,7 @@ class BookingAdmin(admin.ModelAdmin):
         ('Order Details', {'fields': ['room']})
     ]
     list_display = ['name', 'phone_number', 'room']
+
 
 admin.site.register(Room, RoomAdmin)
 admin.site.register(Hostel, HostelAdmin)
