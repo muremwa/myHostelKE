@@ -62,6 +62,10 @@ class Hostel(models.Model):
         return super().clean()
 
     def save(self, *args, **kwargs):
+        # count all rooms
+        self.all_rooms = self.room_set.count()
+
+        # slug url
         self.slug = slugify(str(self.name))
         return super().save(args, kwargs)
 

@@ -52,7 +52,7 @@ class Index(generic.ListView, Retriever):
             query_set = Hostel.objects.filter(institution=school)
         else:
             query_set = Hostel.objects.all()
-        return query_set.filter(available_rooms__gt=0).order_by('-available_rooms')
+        return query_set.filter(all_rooms__gt=0).order_by('-available_rooms')
 
     def popular_hostels(self):
         # gets all popular hostels according to views it has gathered
