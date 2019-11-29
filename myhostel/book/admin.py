@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Room, Hostel, Booking, RoomImage, HostelImage
 
+admin.site.disable_action('delete_selected')
 
 class RoomImageInline(admin.TabularInline):
     model = RoomImage
