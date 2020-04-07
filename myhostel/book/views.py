@@ -13,43 +13,23 @@ from .models import Hostel, Room, Booking
 from .forms import BookRoomForm
 
 
-
-# noinspection PyUnresolvedReferences
-class Retriever:
-    def retrieve_school(self):
-        try:
-            school = self.request.session['school']
-        except KeyError:
-            self.request.session['school'] = None
-            school = self.request.session['school']
-        return school
-
-    def retrieve_cookie(self):
-        try:
-            cookie = self.request.session['cookie']
-        except KeyError:
-            self.request.session['cookie'] = False
-            cookie = self.request.session['cookie']
-        return cookie
-
-
-class Home(generic.TemplateView, Retriever):
+class Home(generic.TemplateView):
     template_name = "home/home.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['school'] = self.retrieve_school()
-        context['cookie'] = self.retrieve_cookie()
+        context['school'] = self.request.session.setdefault('school', None)
+        context['cookie'] = self.request.session.setdefault('cookie', False)
         return context
 
 
-class Index(generic.ListView, Retriever):
+class Index(generic.ListView):
     model = Hostel
     context_object_name = 'hostels'
     paginate_by = 12
 
     def get_queryset(self):
-        school = self.retrieve_school()
+        school = self.request.session.setdefault('school', None)
         if school:
             query_set = Hostel.objects.filter(institution=school)
         else:
@@ -69,14 +49,14 @@ class Index(generic.ListView, Retriever):
             self.request.session['recent_searches'] = []
             recent = self.request.session['recent_searches'][-5:]
 
-        context['school'] = self.retrieve_school()
+        context['school'] = self.request.session.setdefault('school', None)
+        context['cookie'] = self.request.session.setdefault('cookie', False)
         context['recent_searches'] = list(reversed(recent))
         context['popular'] = self.popular_hostels()
-        context['cookie'] = self.retrieve_cookie()
         return context
 
 
-class HostelDetail(generic.DetailView, Retriever):
+class HostelDetail(generic.DetailView):
     model = Hostel
     context_object_name = 'hostel'
     slug_url_kwarg = 'slug'
@@ -110,23 +90,23 @@ class HostelDetail(generic.DetailView, Retriever):
             context['hostel'].views += 1
             self.request.session['seen'] = seen
         context['hostel'].save()
-        context['school'] = self.retrieve_school()
-        context['cookie'] = self.retrieve_cookie()
+        context['school'] = self.request.session.setdefault('school', None)
+        context['cookie'] = self.request.session.setdefault('cookie', False)
         return context
 
 
-class RoomDetail(View, Retriever):
+class RoomDetail(View):
     def get(self, request, *args, **kwargs):
         room = get_object_or_404(Room, room_number=kwargs['room_number'])
 
         return render(request, 'book/room_detail.html', {
             'room': room,
-            'school': self.retrieve_school(),
-            'cookie': self.retrieve_cookie(),
+            'school': self.request.session.setdefault('school', None),
+            'cookie': self.request.session.setdefault('cookie', False),
         })
 
 
-class RoomBooking(View, Retriever):
+class RoomBooking(View):
     template = 'book/now.html'
     form = BookRoomForm
 
@@ -137,8 +117,8 @@ class RoomBooking(View, Retriever):
             raise Http404
 
         return render(request, self.template, {
-            'cookie': self.retrieve_cookie(),
-            'school': self.retrieve_school(),
+            'cookie': self.request.session.setdefault('cookie', False),
+            'school': request.session.setdefault('school', None),
             'room': room,
             'form': self.form
         })
@@ -173,13 +153,13 @@ class RoomBooking(View, Retriever):
             })
         return render(request, 'book/success_booking.html', {
             'room': room,
-            'school': self.retrieve_school(),
-            'cookie': self.retrieve_cookie(),
+            'school': request.session.setdefault('school', None),
+            'cookie': request.session.setdefault('cookie', False),
         })
 
 
 # staff actions home
-class StaffActions(generic.TemplateView, Retriever):
+class StaffActions(generic.TemplateView):
     template_name = 'book/staff.html'
 
     def get(self, request, *args, **kwargs):
@@ -193,13 +173,13 @@ class StaffActions(generic.TemplateView, Retriever):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['school'] = self.retrieve_school()
-        context['cookie'] = self.retrieve_cookie()
+        context['school'] = self.request.session.setdefault('school', None)
+        context['cookie'] = self.request.session.setdefault('cookie', False)
         return context
 
 
 # booking list
-class BookingList(generic.ListView, Retriever):
+class BookingList(generic.ListView):
     model = Booking
     template_name = 'book/bookings_list.html'
     context_object_name = 'bookings'
@@ -216,13 +196,13 @@ class BookingList(generic.ListView, Retriever):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
-        context['school'] = self.retrieve_school()
-        context['cookie'] = self.retrieve_cookie()
+        context['school'] = self.request.session.setdefault('school', None)
+        context['cookie'] = self.request.session.setdefault('cookie', None)
         return context
 
 
 # booking detail
-class BookingDetail(generic.DetailView, Retriever):
+class BookingDetail(generic.DetailView):
     model = Booking
     template_name = "book/booking.html"
     context_object_name = 'booking'
@@ -235,8 +215,8 @@ class BookingDetail(generic.DetailView, Retriever):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['school'] = self.retrieve_school()
-        context['cookie'] = self.retrieve_cookie()
+        context['school'] = self.request.session.setdefault('school', None)
+        context['cookie'] = self.request.session.setdefault('cookie', False)
         return context
 
     @staticmethod
@@ -250,20 +230,20 @@ class BookingDetail(generic.DetailView, Retriever):
             return redirect(reverse('booking-list'))
 
 
-class BookingDelete(generic.DeleteView, Retriever):
+class BookingDelete(generic.DeleteView):
     model = Booking
     success_url = reverse_lazy('booking-list')
     template_name = 'book/booking_confirm_delete.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['school'] = self.retrieve_school()
-        context['cookie'] = self.retrieve_cookie()
+        context['school'] = self.request.session.setdefault('school', None)
+        context['cookie'] = self.request.session.setdefault('cookie', False)
         return context
 
 
 # search action
-class Search(generic.TemplateView, Retriever):
+class Search(generic.TemplateView):
     template_name = 'book/search.html'
 
     @staticmethod
@@ -400,7 +380,7 @@ class Search(generic.TemplateView, Retriever):
             self.request.session['recent_searches'] = []
             recent = self.request.session['recent_searches']
 
-        school = self.retrieve_school()
+        school = self.request.session.setdefault('school', None)
 
         # check if the search is advanced
         if re.search(r'\w+:\w+', query):
@@ -446,5 +426,5 @@ class Search(generic.TemplateView, Retriever):
             'advanced_field': ad_search_term,
             'advanced_lookup': ad_search_term_l,
             'count_results': count,
-            'cookie': self.retrieve_cookie(),
+            'cookie': self.request.session.setdefault('cookie', False),
         })
