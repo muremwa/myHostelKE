@@ -1,15 +1,17 @@
-from django.views import generic, View
+import re
+
 from django.shortcuts import get_object_or_404, render, redirect, reverse
-from django.urls import reverse_lazy
-from django.http import Http404
-from django.contrib import messages
-from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.utils.datastructures import MultiValueDictKeyError
+from django.views import generic, View
+from django.urls import reverse_lazy
+from django.contrib import messages
+from django.http import Http404
+from django.db.models import Q
 
 from .models import Hostel, Room, Booking
 from .forms import BookRoomForm
 
-import re
 
 
 # noinspection PyUnresolvedReferences
@@ -337,12 +339,17 @@ class Search(generic.TemplateView, Retriever):
         elif field in institution:
             # school search
             term = 'institution'
-            results = Hostel.objects.filter(available_rooms__gt=0).filter(institution__icontains=look_up).order_by('-available_rooms')
+            results = Hostel.objects.filter(available_rooms__gt=0).filter(
+                institution__icontains=look_up
+            ).order_by('-available_rooms')
 
         elif field in location:
             # location search
             term = 'location'
-            results = Hostel.objects.filter(available_rooms__gt=0).filter(location__icontains=look_up).order_by('-available_rooms')
+            results = Hostel.objects.filter(available_rooms__gt=0).filter(
+                location__icontains=look_up
+            ).order_by('-available_rooms')
+
             if school:
                 results = results.filter(institution=school)
 
@@ -377,7 +384,11 @@ class Search(generic.TemplateView, Retriever):
         return {'results': results, 'term': term, 'look_up': look_up}
 
     def get(self, *args, **kwargs):
-        query = self.request.GET['query']
+        try:
+            query = self.request.GET['query']
+        except MultiValueDictKeyError:
+            return redirect(reverse('home'))
+
         ad_search = False
         ad_search_term = None
         ad_search_term_l = None
