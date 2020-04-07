@@ -3,7 +3,6 @@ from django.views import generic
 from django.http import Http404
 
 from book.models import Hostel
-from book.views import Retriever
 from .models import Faq
 
 
@@ -55,7 +54,7 @@ def accept_cookies(request):
 
 
 # all frequently asked questions
-class FaqList(generic.ListView, Retriever):
+class FaqList(generic.ListView):
     model = Faq
     context_object_name = 'faqs'
     template_name = 'action/faq_list.html'
@@ -66,13 +65,13 @@ class FaqList(generic.ListView, Retriever):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
-        context['school'] = self.retrieve_school()
-        context['cookie'] = self.retrieve_cookie()
+        context['school'] = self.request.session.setdefault('school', None)
+        context['cookie'] = self.request.session.setdefault('cookie', False)
         return context
 
 
 # each faq
-class FaqDetail(generic.DetailView, Retriever):
+class FaqDetail(generic.DetailView):
     model = Faq
     context_object_name = 'faq'
     template_name = 'action/faq.html'
@@ -85,6 +84,6 @@ class FaqDetail(generic.DetailView, Retriever):
             raise Http404('The FAQ item you requested is not published yet')
 
         # add school and cookie to context
-        context['school'] = self.retrieve_school()
-        context['cookie'] = self.retrieve_cookie()
+        context['school'] = self.request.session.setdefault('school', None)
+        context['cookie'] = self.request.session.setdefault('cookie', False)
         return context
