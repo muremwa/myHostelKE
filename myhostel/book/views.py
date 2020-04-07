@@ -374,11 +374,7 @@ class Search(generic.TemplateView):
         ad_search_term_l = None
 
         # retrieve previous searches
-        try:
-            recent = self.request.session['recent_searches']
-        except KeyError:
-            self.request.session['recent_searches'] = []
-            recent = self.request.session['recent_searches']
+        recent = self.request.session.setdefault('recent_searches', [])
 
         school = self.request.session.setdefault('school', None)
 
