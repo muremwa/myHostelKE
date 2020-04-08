@@ -19,7 +19,7 @@
             <div id="main-search-bar">
 
                 <form id="main-search-bar-form" method="GET" action="{% url 'book:search' %}" class="form-inline">
-                    <input id="main-search-bar-form-input" autofocus class="form-control mr-sm-4" type="search" name="query" value="{{ query }}" placeholder="Search for hostels" aria-label="Search">
+                    <input id="main-search-bar-form-input" autofocus class="form-control mr-sm-4" type="search" name="query" value="{{ query }}" placeholder="Search for hostels" aria-label="Search" required>
                     <button id="main-search-bar-form-btn" class="btn btn-dark my-2 my-sm-0" type="submit">Search</button>
                 </form>
 
