@@ -74,7 +74,6 @@ class Hostel(models.Model):
         images = self.hostelimage_set.all()
         for image in images:
             image.file.delete()
-            print('deleted {}'.format(image.file))
         return super().delete()
 
     def get_main_image(self):
@@ -89,11 +88,7 @@ class Hostel(models.Model):
 
     def get_prices(self):
         res = str(self.price_range).split(" ")
-        res_ = []
-        for item in res:
-            if item.isdigit():
-                res_.append(int(item))
-        return res_
+        return [int(item) for item in res if item.isdigit()]
 
     def increment_room_type(self, room_type):
         room_type = str(room_type)
@@ -246,7 +241,6 @@ class HostelImage(models.Model):
 
     def clean(self):
         # image to be 16:9
-        # noinspection PyUnresolvedReferences
         if not sixteen_by_nine(self.file.width, self.file.height):
             raise ValidationError(_('Image is not 16:9 please crop it'))
 

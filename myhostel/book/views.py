@@ -1,3 +1,5 @@
+from functools import reduce
+from operator import add
 import re
 
 from django.shortcuts import get_object_or_404, render, redirect, reverse
@@ -247,14 +249,15 @@ class Search(generic.TemplateView):
     template_name = 'book/search.html'
 
     @staticmethod
-    def basic_search(query, school):
+    def basic_search(query, school, **kwargs):
         # search in the name, school and location fields
         q_set = (
                 Q(name__icontains=query) |
                 Q(institution__icontains=query) |
                 Q(location__icontains=query)
         )
-        results = Hostel.objects.filter(q_set)
+        query_set = kwargs.get('query_set', Hostel.objects.all())
+        results = query_set.filter(q_set)
 
         if school:
             results = results.filter(institution__contains=school)
@@ -265,20 +268,22 @@ class Search(generic.TemplateView):
     def price_search(range_of_price, school, **kwargs):
         # split the query term eg '4000-8000' as [4000, 8000] and search the price range of the hostels that
         # have price ranges between the two. Hostel class has a method to split its price range
-        hostels = Hostel.objects.filter(available_rooms__gt=0).order_by('-available_rooms')
+        query_set = kwargs.get('query_set', Hostel.objects.all())
+        hostels = query_set.filter(available_rooms__gt=0).order_by('-available_rooms')
         if school:
             hostels = hostels.filter(institution=school)
         res = []
+
         if kwargs['below']:
             for hostel in hostels:
                 r = hostel.get_prices()
                 try:
-                    new_pr_range = int(range_of_price)
+                    new_price_range = int(range_of_price)
                 except ValueError:
                     return res
 
-                if new_pr_range >= r[0] and r[-1] >= new_pr_range:
-                    res.append(hostel)
+                if r[0] <= new_price_range <= r[-1]:
+                    res.append(hostel.pk)
         else:
             try:
                 from_ = int(range_of_price.split("-")[0])
@@ -289,16 +294,19 @@ class Search(generic.TemplateView):
             for hostel in hostels:
                 r = hostel.get_prices()
                 if r[0] >= from_ and r[-1] <= to_:
-                    res.append(hostel)
+                    res.append(hostel.pk)
 
-        return res
+        return hostels.filter(pk__in=res)
 
-    def advanced_search(self, query, school):
+    def advanced_search(self, query, school, **kwargs):
         query = query.split(":")
         field = query[0].upper()
         look_up = query[-1]
         term = None
         results = []
+
+        # may be a query set is passed for chaining
+        hostel_set = kwargs.get('query_set', Hostel.objects.all())
 
         price = ["PRICE", "RENT", "MONTHLY", "BELOW"]
         institution = ["UNIVERSITY", "CAMPUS", "SCHOOL", "COLLEGE", "INSTITUTION", "VARSITY", "AT"]
@@ -314,19 +322,19 @@ class Search(generic.TemplateView):
             term = 'price'
             if field == price[-1]:
                 below = True
-            results = self.price_search(look_up, school, below=below)
+            results = self.price_search(look_up, school, below=below, query_set=hostel_set)
 
         elif field in institution:
             # school search
             term = 'institution'
-            results = Hostel.objects.filter(available_rooms__gt=0).filter(
+            results = hostel_set.filter(available_rooms__gt=0).filter(
                 institution__icontains=look_up
             ).order_by('-available_rooms')
 
         elif field in location:
             # location search
             term = 'location'
-            results = Hostel.objects.filter(available_rooms__gt=0).filter(
+            results = hostel_set.filter(available_rooms__gt=0).filter(
                 location__icontains=look_up
             ).order_by('-available_rooms')
 
@@ -340,19 +348,19 @@ class Search(generic.TemplateView):
 
             if look_up in one_room:
                 look_up = "One Bedroom"
-                results = Hostel.objects.all().filter(one__gt=0).order_by('-one')
+                results = hostel_set.filter(one__gt=0).order_by('-one')
 
             elif look_up in two_bedroom:
                 look_up = "Two Bedroom"
-                results = Hostel.objects.all().filter(two__gt=0).order_by('-two')
+                results = hostel_set.filter(two__gt=0).order_by('-two')
 
             elif look_up in bed_sitter:
                 look_up = "Bedsitter"
-                results = Hostel.objects.all().filter(bs__gt=0).order_by('-bs')
+                results = hostel_set.filter(bs__gt=0).order_by('-bs')
 
             elif look_up.upper() == "SINGLE" or look_up == "SINGLE ROOM":
                 look_up = "Single Room"
-                results = Hostel.objects.all().filter(sr__gt=0).order_by('-sr')
+                results = hostel_set.filter(sr__gt=0).order_by('-sr')
 
             else:
                 # if none defaults to basic search
@@ -375,19 +383,27 @@ class Search(generic.TemplateView):
 
         # retrieve previous searches
         recent = self.request.session.setdefault('recent_searches', [])
-
+        # retrieve school
         school = self.request.session.setdefault('school', None)
 
         # check if the search is advanced
         if re.search(r'\w+:\w+', query):
-            if len(query.split(':')) == 2:
-                ad_search = True
-                temp = self.advanced_search(query, school)
-                results = temp['results']
-                ad_search_term = temp['term']
-                ad_search_term_l = temp['look_up']
-            else:
-                results = self.basic_search(query, school)
+            chains = query.split('&')
+            results = None
+
+            for k, chain in enumerate(chains):
+                if len(chain.split(':')) == 2:
+                    ad_search = True
+                    # temp = self.advanced_search(chain, school)
+                    if k == 0:
+                        temp = self.advanced_search(chain, school)
+                    else:
+                        temp = self.advanced_search(chain, school, query_set=results)
+                    results = temp['results']
+                    ad_search_term = temp['term']
+                    ad_search_term_l = temp['look_up']
+                else:
+                    results = self.basic_search(chain, school)
         else:
             results = self.basic_search(query, school)
 
@@ -405,7 +421,7 @@ class Search(generic.TemplateView):
 
         # pagination
         page = self.request.GET.get('page', 1)
-        paginator = Paginator(results, 10)
+        paginator = Paginator(results, 4)
 
         try:
             results = paginator.page(page)
