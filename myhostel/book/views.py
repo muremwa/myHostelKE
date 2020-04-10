@@ -377,6 +377,11 @@ class Search(generic.TemplateView):
         except MultiValueDictKeyError:
             return redirect(reverse('home'))
 
+        # the query might be separated with a space, switch up the space with a '+'
+        query = query.translate(str.maketrans(' ', '+'))
+
+        print(query)
+
         ad_search = False
         ad_search_term = None
         ad_search_term_l = None
@@ -388,13 +393,12 @@ class Search(generic.TemplateView):
 
         # check if the search is advanced
         if re.search(r'\w+:\w+', query):
-            chains = query.split('&')
+            chains = query.split('+')
             results = None
 
             for k, chain in enumerate(chains):
                 if len(chain.split(':')) == 2:
                     ad_search = True
-                    # temp = self.advanced_search(chain, school)
                     if k == 0:
                         temp = self.advanced_search(chain, school)
                     else:
@@ -421,7 +425,7 @@ class Search(generic.TemplateView):
 
         # pagination
         page = self.request.GET.get('page', 1)
-        paginator = Paginator(results, 4)
+        paginator = Paginator(results, 10)
 
         try:
             results = paginator.page(page)
