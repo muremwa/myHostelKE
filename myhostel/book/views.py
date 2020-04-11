@@ -1,5 +1,3 @@
-from functools import reduce
-from operator import add
 import re
 
 from django.shortcuts import get_object_or_404, render, redirect, reverse
