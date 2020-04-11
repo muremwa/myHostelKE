@@ -375,14 +375,7 @@ class Search(generic.TemplateView):
         except MultiValueDictKeyError:
             return redirect(reverse('home'))
 
-        # the query might be separated with a space, switch up the space with a '+'
-        query = query.translate(str.maketrans(' ', '+'))
-
-        print(query)
-
-        ad_search = False
-        ad_search_term = None
-        ad_search_term_l = None
+        advanced_search, advanced_search_term, advanced_search_look_up = False, None, None
 
         # retrieve previous searches
         recent = self.request.session.setdefault('recent_searches', [])
@@ -390,22 +383,25 @@ class Search(generic.TemplateView):
         school = self.request.session.setdefault('school', None)
 
         # check if the search is advanced
-        if re.search(r'\w+:\w+', query):
-            chains = query.split('+')
+        if re.search(r'AND', query):
+            chains = query.split(' AND ')
             results = None
 
             for k, chain in enumerate(chains):
                 if len(chain.split(':')) == 2:
-                    ad_search = True
+                    advanced_search = True
                     if k == 0:
                         temp = self.advanced_search(chain, school)
                     else:
                         temp = self.advanced_search(chain, school, query_set=results)
                     results = temp['results']
-                    ad_search_term = temp['term']
-                    ad_search_term_l = temp['look_up']
+                    advanced_search_term = temp['term']
+                    advanced_search_look_up = temp['look_up']
                 else:
-                    results = self.basic_search(chain, school)
+                    if k == 0:
+                        results = self.basic_search(chain, school)
+                    else:
+                        results = self.basic_search(chain, school, query_set=results)
         else:
             results = self.basic_search(query, school)
 
@@ -423,7 +419,7 @@ class Search(generic.TemplateView):
 
         # pagination
         page = self.request.GET.get('page', 1)
-        paginator = Paginator(results, 10)
+        paginator = Paginator(results, 3)
 
         try:
             results = paginator.page(page)
@@ -436,9 +432,9 @@ class Search(generic.TemplateView):
             'school': school,
             'query': query,
             'results': results,
-            'advanced': ad_search,
-            'advanced_field': ad_search_term,
-            'advanced_lookup': ad_search_term_l,
+            'advanced': advanced_search,
+            'advanced_field': advanced_search_term,
+            'advanced_lookup': advanced_search_look_up,
             'count_results': count,
             'cookie': self.request.session.setdefault('cookie', False),
         })
