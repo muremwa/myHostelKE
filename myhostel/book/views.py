@@ -43,12 +43,7 @@ class Index(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
         # recent searches
-        try:
-            recent = self.request.session['recent_searches'][-5:]
-        except KeyError:
-            self.request.session['recent_searches'] = []
-            recent = self.request.session['recent_searches'][-5:]
-
+        recent = self.request.session.setdefault('recent_searches', [])[-5:]
         context['school'] = self.request.session.setdefault('school', None)
         context['cookie'] = self.request.session.setdefault('cookie', False)
         context['recent_searches'] = list(reversed(recent))
@@ -79,17 +74,13 @@ class HostelDetail(generic.DetailView):
         context['hostel_suggestions'] = self.hostel_suggestions(context['hostel'])
 
         # add a view to the hostel using sessions
-        try:
-            seen = self.request.session['hostels_seen']
-        except KeyError:
-            self.request.session['hostels_seen'] = []
-            seen = self.request.session['hostels_seen']
-
+        seen = self.request.session.setdefault('hostels_seen', [])
         if context['hostel'].pk not in seen:
             seen.append(context['hostel'].pk)
             context['hostel'].views += 1
             self.request.session['seen'] = seen
-        context['hostel'].save()
+            context['hostel'].save()
+
         context['school'] = self.request.session.setdefault('school', None)
         context['cookie'] = self.request.session.setdefault('cookie', False)
         return context
@@ -278,7 +269,7 @@ class Search(generic.TemplateView):
                 try:
                     new_price_range = int(range_of_price)
                 except ValueError:
-                    return res
+                    continue
 
                 if r[0] <= new_price_range <= r[-1]:
                     res.append(hostel.pk)
@@ -287,7 +278,8 @@ class Search(generic.TemplateView):
                 from_ = int(range_of_price.split("-")[0])
                 to_ = int(range_of_price.split("-")[-1])
             except ValueError:
-                return res
+                from_ = 0
+                to_ = 100000
 
             for hostel in hostels:
                 r = hostel.get_prices()
@@ -306,30 +298,22 @@ class Search(generic.TemplateView):
         # may be a query set is passed for chaining
         hostel_set = kwargs.get('query_set', Hostel.objects.all())
 
-        price = ["PRICE", "RENT", "MONTHLY", "BELOW"]
-        institution = ["UNIVERSITY", "CAMPUS", "SCHOOL", "COLLEGE", "INSTITUTION", "VARSITY", "AT"]
-        location = ["PLACE", "IN", "WHERE", "LOCATED"]
-        house_types = ["BEDROOM", ]
-        one_room = ["ONE", "1"]
-        two_bedroom = ["TWO", "2"]
-        bed_sitter = ["BS", "BEDSITTER"]
-
-        if field in price:
+        if field in ["PRICE", "RENT", "MONTHLY", "BELOW"]:
             # price searches
             below = False
             term = 'price'
-            if field == price[-1]:
+            if field == "BELOW":
                 below = True
             results = self.price_search(look_up, school, below=below, query_set=hostel_set)
 
-        elif field in institution:
+        elif field in ["UNIVERSITY", "CAMPUS", "SCHOOL", "COLLEGE", "INSTITUTION", "VARSITY", "AT"]:
             # school search
             term = 'institution'
             results = hostel_set.filter(available_rooms__gt=0).filter(
                 institution__icontains=look_up
             ).order_by('-available_rooms')
 
-        elif field in location:
+        elif field in ["PLACE", "IN", "WHERE", "LOCATED"]:
             # location search
             term = 'location'
             results = hostel_set.filter(available_rooms__gt=0).filter(
@@ -339,24 +323,24 @@ class Search(generic.TemplateView):
             if school:
                 results = results.filter(institution=school)
 
-        elif field in house_types:
+        elif field in ["BEDROOM", ]:
             # house types
             look_up = look_up.upper()
             term = 'house_type'
 
-            if look_up in one_room:
+            if look_up in ["ONE", "1"]:
                 look_up = "One Bedroom"
                 results = hostel_set.filter(one__gt=0).order_by('-one')
 
-            elif look_up in two_bedroom:
+            elif look_up in ["TWO", "2"]:
                 look_up = "Two Bedroom"
                 results = hostel_set.filter(two__gt=0).order_by('-two')
 
-            elif look_up in bed_sitter:
+            elif look_up in ["BS", "BEDSITTER"]:
                 look_up = "Bedsitter"
                 results = hostel_set.filter(bs__gt=0).order_by('-bs')
 
-            elif look_up.upper() == "SINGLE" or look_up == "SINGLE ROOM":
+            elif look_up.upper() in ["SINGLE", "SINGLE ROOM"]:
                 look_up = "Single Room"
                 results = hostel_set.filter(sr__gt=0).order_by('-sr')
 
@@ -383,7 +367,7 @@ class Search(generic.TemplateView):
         school = self.request.session.setdefault('school', None)
 
         # check if the search is advanced
-        if re.search(r'AND', query):
+        if re.search(r'AND', query) or re.search(r'\w+:\w+', query):
             chains = query.split(' AND ')
             results = None
 
