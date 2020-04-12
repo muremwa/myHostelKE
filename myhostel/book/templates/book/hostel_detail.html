@@ -71,7 +71,7 @@
 
     <div style="color: #4a4c64;" class="available-rooms">
         <div class="container text-center">
-            <h2>rooms at the {{ hostel.name }} ({{hostel.available_rooms}}){% if filtered %} <small>Filtered by {{ filtered }}.</small>{% endif %}</h2>
+            <h2>rooms at the {{ hostel.name }} {% if filtered %} <small>Filtered by {{ filtered }}</small>{% endif %} ({{ rooms.count }})</h2>
         </div>
 
 
