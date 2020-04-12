@@ -18,6 +18,9 @@ class Faq(models.Model):
     publish = models.BooleanField(default=False)
     objects = models.Manager()
 
+    class Meta:
+        ordering = ['-id']
+
     def __str__(self):
         return self.question
 

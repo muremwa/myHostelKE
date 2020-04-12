@@ -25,7 +25,7 @@
                     {% comment %} House type search {% endcomment %}
                     {% for result in results %}
                         <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
-                            <a href="{% url 'book:hostel' result.slug %}">
+                            <a href="{% url 'book:hostel' result.slug %}?filtered={{ advanced_lookup }}">
                                 <div class="result-name text-center">
                                     <h3>{{ result.name }} <br /><small><strong>{% if advanced_lookup == "One Bedroom" %}{{result.one}} {% else %}{% if advanced_lookup == "Two Bedroom" %}{{result.two}}{% else %}{% if advanced_lookup == "Single Room" %}{{result.sr}}{% else %}{{result.bs}}{% endif %}{% endif %}{% endif %} {{ advanced_lookup }}</strong> rooms available</small></h3>
                                     <hr>
@@ -93,7 +93,7 @@
                                 {% comment %} Price search {% endcomment %}
                                 {% for result in results %}
                                     <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
-                                        <a href="{% url 'book:hostel' result.slug %}">
+                                        <a href="{% url 'book:hostel' result.slug %}?filtered={{ advanced_lookup }}">
                                             <div class="result-name text-center">
                                                 <h3><strong>{{ result.name }}</strong><br/><small><br/>{{ result.price_range}}</small></h3>
                                                 <hr>

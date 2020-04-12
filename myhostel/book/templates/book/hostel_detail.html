@@ -66,25 +66,25 @@
         </div>
     </div>
 
-    {% if hostel.all_available_rooms %}
+    {% if rooms %}
     <hr class="main-divider">
 
     <div style="color: #4a4c64;" class="available-rooms">
         <div class="container text-center">
-            <h2>rooms at the {{ hostel.name }} ({{hostel.available_rooms}})</h2>
+            <h2>rooms at the {{ hostel.name }} ({{hostel.available_rooms}}){% if filtered %} <small>Filtered by {{ filtered }}.</small>{% endif %}</h2>
         </div>
 
 
         <!-- Rooms in the hostel -->
         <div class="row">
-            {% for room in hostel.all_available_rooms %}
+            {% for room in rooms %}
                 {% include "book/room.html" %}
             {% endfor %}
         </div>
 
     </div>    
     {% else %}
-        <h2 class="text-center">{{ hostel}} has no rooms available rooms for booking</h2>
+        <h2 class="text-center">{{ hostel}} has no {{ filtered }} rooms available rooms for booking</h2>
     {% endif %}
 
     <hr class="main-divider">

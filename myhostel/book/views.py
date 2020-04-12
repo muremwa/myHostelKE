@@ -69,9 +69,36 @@ class HostelDetail(generic.DetailView):
         )
         return suggestions
 
+    def get_rooms_to_display(self):
+        room_set = self.object.all_available_rooms()
+
+        if 'filtered' in self.request.GET:
+            filter_by = self.request.GET['filtered']
+
+            # by house types
+            house_types = {house_type[1]: house_type[0] for house_type in Room.house_types}
+
+            if filter_by in house_types:
+                room_set = room_set.filter(house_type__exact=house_types[filter_by])
+
+            elif re.search(r'\d+-\d+', filter_by):
+                prices = filter_by.split('-')
+                room_set = room_set.filter(
+                    price__gte=prices[0]
+                ).filter(
+                    price__lte=prices[1]
+                )
+
+            elif re.search(r'\d{3,6}', filter_by):
+                room_set = room_set.filter(price__lte=filter_by)
+
+        return room_set
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['hostel_suggestions'] = self.hostel_suggestions(context['hostel'])
+        context['rooms'] = self.get_rooms_to_display()
+        context['filtered'] = self.request.GET.get('filtered', None)
 
         # add a view to the hostel using sessions
         seen = self.request.session.setdefault('hostels_seen', [])
