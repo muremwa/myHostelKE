@@ -12,29 +12,13 @@ def add_school(request):
         if school:
             request.session['school'] = school
         return redirect(reverse('book:index'))
-    else:
-        schools = []
+
+    elif request.method == "GET":
+        schools = set()
         for hostel in Hostel.objects.all():
-            if hostel.institution not in schools:
-                schools.append(hostel.institution)
+            schools.add(hostel.institution)
 
-        try:
-            school = request.session['school']
-        except KeyError:
-            request.session['school'] = None
-            school = request.session['school']
-
-        try:
-            cookie = request.session['cookie']
-        except KeyError:
-            request.session['cookie'] = False
-            cookie = request.session['cookie']
-
-        return render(request, 'action/specify.html', {
-            'schools': schools,
-            'school': school,
-            'cookie': cookie,
-        })
+        return render(request, 'action/specify.html', {'schools': schools})
 
 
 def remove_school(request):
@@ -63,12 +47,6 @@ class FaqList(generic.ListView):
     def get_queryset(self):
         return Faq.objects.filter(publish=True)
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data()
-        context['school'] = self.request.session.setdefault('school', None)
-        context['cookie'] = self.request.session.setdefault('cookie', False)
-        return context
-
 
 # each faq
 class FaqDetail(generic.DetailView):
@@ -82,8 +60,4 @@ class FaqDetail(generic.DetailView):
         # raise 404 if article is not published
         if not context['faq'].publish:
             raise Http404('The FAQ item you requested is not published yet')
-
-        # add school and cookie to context
-        context['school'] = self.request.session.setdefault('school', None)
-        context['cookie'] = self.request.session.setdefault('cookie', False)
         return context

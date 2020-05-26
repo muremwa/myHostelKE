@@ -16,12 +16,6 @@ from .forms import BookRoomForm
 class Home(generic.TemplateView):
     template_name = "home/home.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['school'] = self.request.session.setdefault('school', None)
-        context['cookie'] = self.request.session.setdefault('cookie', False)
-        return context
-
 
 class Index(generic.ListView):
     model = Hostel
@@ -44,8 +38,6 @@ class Index(generic.ListView):
         context = super().get_context_data()
         # recent searches
         recent = self.request.session.setdefault('recent_searches', [])[-5:]
-        context['school'] = self.request.session.setdefault('school', None)
-        context['cookie'] = self.request.session.setdefault('cookie', False)
         context['recent_searches'] = list(reversed(recent))
         context['popular'] = self.popular_hostels()
         return context
@@ -72,6 +64,7 @@ class HostelDetail(generic.DetailView):
     def get_rooms_to_display(self):
         room_set = self.object.all_available_rooms()
 
+        # filter the rooms according to a search result
         if 'filtered' in self.request.GET:
             filter_by = self.request.GET['filtered']
 
@@ -100,7 +93,7 @@ class HostelDetail(generic.DetailView):
         context['rooms'] = self.get_rooms_to_display()
         context['filtered'] = self.request.GET.get('filtered', None)
 
-        # add a view to the hostel using sessions
+        # add a view to the hostel using sessions. Has this user seen this hostel before?
         seen = self.request.session.setdefault('hostels_seen', [])
         if context['hostel'].pk not in seen:
             seen.append(context['hostel'].pk)
@@ -108,20 +101,14 @@ class HostelDetail(generic.DetailView):
             self.request.session['seen'] = seen
             context['hostel'].save()
 
-        context['school'] = self.request.session.setdefault('school', None)
-        context['cookie'] = self.request.session.setdefault('cookie', False)
         return context
 
 
 class RoomDetail(View):
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request, *args, **kwargs):
         room = get_object_or_404(Room, room_number=kwargs['room_number'])
-
-        return render(request, 'book/room_detail.html', {
-            'room': room,
-            'school': self.request.session.setdefault('school', None),
-            'cookie': self.request.session.setdefault('cookie', False),
-        })
+        return render(request, 'book/room_detail.html', {'room': room})
 
 
 class RoomBooking(View):
@@ -135,8 +122,6 @@ class RoomBooking(View):
             raise Http404
 
         return render(request, self.template, {
-            'cookie': self.request.session.setdefault('cookie', False),
-            'school': request.session.setdefault('school', None),
             'room': room,
             'form': self.form
         })
@@ -162,18 +147,15 @@ class RoomBooking(View):
                 room.hostel.save()
                 room.save()
             else:
-                raise Http404
+                raise Http404("This room is not available")
 
         else:
             return render(request, self.template, {
                 'form': form,
                 'room': room
             })
-        return render(request, 'book/success_booking.html', {
-            'room': room,
-            'school': request.session.setdefault('school', None),
-            'cookie': request.session.setdefault('cookie', False),
-        })
+
+        return render(request, 'book/success_booking.html', {'room': room})
 
 
 # staff actions home
@@ -182,18 +164,10 @@ class StaffActions(generic.TemplateView):
 
     def get(self, request, *args, **kwargs):
         # non staff users are get a 404 error by this page
-        if not self.request.user:
-            raise Http404
-        elif not self.request.user.is_staff:
+        if not self.request.user.is_staff:
             raise Http404
         else:
             return super().get(request, args, kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['school'] = self.request.session.setdefault('school', None)
-        context['cookie'] = self.request.session.setdefault('cookie', False)
-        return context
 
 
 # booking list
@@ -210,13 +184,7 @@ class BookingList(generic.ListView):
             return super().get(request, args, kwargs)
 
     def get_queryset(self):
-        return Booking.objects.all().order_by('cleared')
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data()
-        context['school'] = self.request.session.setdefault('school', None)
-        context['cookie'] = self.request.session.setdefault('cookie', None)
-        return context
+        return Booking.objects.order_by('cleared')
 
 
 # booking detail
@@ -230,12 +198,6 @@ class BookingDetail(generic.DetailView):
             raise Http404
         else:
             return super().get(request, args, kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['school'] = self.request.session.setdefault('school', None)
-        context['cookie'] = self.request.session.setdefault('cookie', False)
-        return context
 
     @staticmethod
     def post(request, *args, **kwargs):
@@ -252,12 +214,6 @@ class BookingDelete(generic.DeleteView):
     model = Booking
     success_url = reverse_lazy('booking-list')
     template_name = 'book/booking_confirm_delete.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['school'] = self.request.session.setdefault('school', None)
-        context['cookie'] = self.request.session.setdefault('cookie', False)
-        return context
 
 
 # search action
@@ -440,12 +396,10 @@ class Search(generic.TemplateView):
             results = paginator.page(paginator.num_pages)
 
         return render(self.request, self.template_name, {
-            'school': school,
             'query': query,
             'results': results,
             'advanced': advanced_search,
             'advanced_field': advanced_search_term,
             'advanced_lookup': advanced_search_look_up,
             'count_results': count,
-            'cookie': self.request.session.setdefault('cookie', False),
         })
