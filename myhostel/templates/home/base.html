@@ -141,8 +141,8 @@
         </div>
       </footer>
       <script type="text/javascript">
-        var x = new Date();
-        document.getElementById('c-y').innerText = x.getFullYear();
+        const smallDate = new Date();
+        document.getElementById('c-y').innerText = smallDate.getFullYear();
       </script>
 
         {% if not cookie %}
@@ -161,9 +161,6 @@
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/base.js' %}"></script>
-    {% if user.is_staff %}
-    <script src="{% static 'js/admin.js' %}"></script>
-    {% endif %}
     {% block script %}{% endblock script %}
 </body>
 </html>
