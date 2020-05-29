@@ -138,9 +138,7 @@ class Room(models.Model):
 
     def clean(self):
         # price should not be lower or higher than price range
-        # noinspection PyUnresolvedReferences
         hostel_range = self.hostel.get_prices()
-        # noinspection PyTypeChecker
         if self.price < int(hostel_range[0]) or self.price > int(hostel_range[-1]):
             raise ValidationError(_(
                 "Ensure price is within the price range of the \"{}\" that is between {} and {}".format(

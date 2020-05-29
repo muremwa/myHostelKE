@@ -66,26 +66,37 @@
         </div>
     </div>
 
-    {% if rooms %}
-    <hr class="main-divider">
+    <div id="available-rooms">
+        {% if rooms %}
+        <hr class="main-divider">
 
-    <div style="color: #4a4c64;" class="available-rooms">
-        <div class="container text-center">
-            <h2>rooms at the {{ hostel.name }} {% if filtered %} <small>Filtered by {{ filtered }}</small>{% endif %} ({{ rooms.count }})</h2>
+        <div style="color: #4a4c64;">
+            <div class="container text-center">
+                <h2>rooms at the {{ hostel.name }} {% if filtered %} <small>Filtered by {{ filtered }} <a href="{% url 'book:hostel' hostel.slug %}#available-rooms">See all rooms instead</a></small>{% endif %} ({{ rooms.count }})</h2>
+                <ul id="room-filters">
+                    <li><a href="?filtered=Bedsitter#available-rooms">bedsitters</a></li>
+                    <li><a href="?filtered=Single Room#available-rooms">single rooms</a></li>
+                    <li><a href="?filtered=One Bedroom#available-rooms">one bedrooms</a></li>
+                    <li><a href="?filtered=Two Bedroom#available-rooms">two bedrooms</a></li>
+                </ul>
+            </div>
+
+
+            <!-- Rooms in the hostel -->
+            <div class="row">
+                {% for room in rooms %}
+                    {% include "book/room.html" %}
+                {% endfor %}
+            </div>
+
         </div>
-
-
-        <!-- Rooms in the hostel -->
-        <div class="row">
-            {% for room in rooms %}
-                {% include "book/room.html" %}
-            {% endfor %}
-        </div>
-
-    </div>    
-    {% else %}
-        <h2 class="text-center">{{ hostel}} has no {{ filtered }} rooms available rooms for booking</h2>
-    {% endif %}
+        {% else %}
+            <h2 class="text-center">
+                {{ hostel}} has no {{ filtered }} rooms available rooms for booking
+                <a href="{% url 'book:hostel' hostel.slug %}#available-rooms">See all rooms</a>
+            </h2>
+        {% endif %}
+    </div>
 
     <hr class="main-divider">
 
@@ -128,5 +139,3 @@
 	{% include 'home/over_view.html' %}
 
 {% endblock content %}
-
-{% block script %}<script src="{% static 'book/js/hostel_detail.js' %}"></script>{% endblock script %}

@@ -7,19 +7,17 @@
 {% block crumb %}
     <li class="breadcrumb-item"><a href="{% url 'book:index' %}">hostels</a></li>
     <li class="breadcrumb-item"><a href="{% url 'book:hostel' room.hostel.slug  %}">{{ room.hostel.name }}</a></li>
-    <li class="breadcrumb-item">{{ room.room_number}}</li>
+    <li class="breadcrumb-item"><a href="{% url 'book:room' room.hostel.slug room.room_number %}">{{ room.room_number}}</a></li>
     <li class="breadcrumb-item">booked</li>
 {% endblock crumb %}
 
 {% block content %}
 
-<!-- TODO: add a breadcrumb on success -->
-
 <div class="container col-md-6" style="min-height: 45vh;">
     <div class="alert alert-info">
-        <h2>Succesfully booked</h2>
+        <h2>Successfully booked <a href="{% url 'book:room' room.hostel.slug room.room_number %}">{{ room.room_number}}</a> from <a href="{% url 'book:hostel' room.hostel.slug %}">{{ room.hostel.name }}</a> </h2>
         <p class="lead">Your will be contacted by us and provided with information on how to retain your room.</p>
-        <span>Thank you for using myHostelKE</span>
+        <span>Thank you for using myHostelKenya</span>
     </div>
 </div>
 

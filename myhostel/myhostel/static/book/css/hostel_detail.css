@@ -68,6 +68,12 @@
     color: aliceblue;
 }
 
+#room-filters > li{
+    text-decoration: none;
+    display: inline;
+    margin-left: 1em;
+}
+
 @media screen and ( max-width: 575px){
     .book-ico img {
         width: 5em;

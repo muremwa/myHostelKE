@@ -63,6 +63,7 @@ class HostelDetail(generic.DetailView):
 
     def get_rooms_to_display(self):
         room_set = self.object.all_available_rooms()
+        filter_by = None
 
         # filter the rooms according to a search result
         if 'filtered' in self.request.GET:
@@ -74,6 +75,7 @@ class HostelDetail(generic.DetailView):
             if filter_by in house_types:
                 room_set = room_set.filter(house_type__exact=house_types[filter_by])
 
+            # filter by price range
             elif re.search(r'\d+-\d+', filter_by):
                 prices = filter_by.split('-')
                 room_set = room_set.filter(
@@ -82,16 +84,17 @@ class HostelDetail(generic.DetailView):
                     price__lte=prices[1]
                 )
 
+            # filter by price below 'filter_by'
             elif re.search(r'\d{3,6}', filter_by):
                 room_set = room_set.filter(price__lte=filter_by)
+                filter_by = "below Ksh.%s" % filter_by
 
-        return room_set
+        return room_set, filter_by
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['hostel_suggestions'] = self.hostel_suggestions(context['hostel'])
-        context['rooms'] = self.get_rooms_to_display()
-        context['filtered'] = self.request.GET.get('filtered', None)
+        context['rooms'], context['filtered'] = self.get_rooms_to_display()
 
         # add a view to the hostel using sessions. Has this user seen this hostel before?
         seen = self.request.session.setdefault('hostels_seen', [])
@@ -306,7 +309,7 @@ class Search(generic.TemplateView):
             if school:
                 results = results.filter(institution=school)
 
-        elif field in ["BEDROOM", ]:
+        elif field in ["BEDROOM", "ROOM", "ROOMS"]:
             # house types
             look_up = look_up.upper()
             term = 'house_type'

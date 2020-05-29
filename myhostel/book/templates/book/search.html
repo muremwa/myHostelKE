@@ -122,7 +122,7 @@
                     <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
                         <a href="{% url 'book:hostel' result.slug %}">
                             <div class="result-name text-center">
-                                <h3>{{ result.name }}</strong><br/><small><img class="locate-pin-hostel" src="{% static 'svg/place.svg' %}" alt=""> {{result.location}}</small></h3>
+                                <h3><strong>{{ result.name }}</strong><br/><small><img class="locate-pin-hostel" src="{% static 'svg/place.svg' %}" alt=""> {{result.location}}</small></h3>
                                 <hr>
                             </div>
                             <div class="more-result-info">
