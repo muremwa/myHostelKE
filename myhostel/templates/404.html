@@ -1,3 +1,17 @@
-<div class="container text-center">
-    <h1>The page you are looking for does not exist any more at <br/> myHostelKenya</h1>
+{% extends 'home/base.html' %}
+{% block title %}404 page not found{% endblock title %}
+{% block crumb %}<li class="breadcrumb-item"><a href="/" aria-disabled="true">404</a></li>{% endblock crumb %}
+
+{% block content %}
+<style>
+    #main {
+        margin-top: 10vh;
+        margin-bottom: 19.7vh;
+    }
+</style>
+<div id="main" class="text-center">
+    <h1>404 error</h1>
+    <h2>The page you're looking for does not exist on our servers</h2>
 </div>
+
+{% endblock content %}

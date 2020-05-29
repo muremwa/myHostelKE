@@ -1,0 +1,17 @@
+{% extends 'home/base.html' %}
+{% block title %}500 server error{% endblock title %}
+{% block crumb %}<li class="breadcrumb-item"><a href="/" aria-disabled="true">500</a></li>{% endblock crumb %}
+
+{% block content %}
+<style>
+    #main {
+        margin-top: 10vh;
+        margin-bottom: 19.7vh;
+    }
+</style>
+<div id="main" class="text-center">
+    <h1>505 error</h1>
+    <h2>Our servers have encountered a critical error processing your request.</h2>
+</div>
+
+{% endblock content %}

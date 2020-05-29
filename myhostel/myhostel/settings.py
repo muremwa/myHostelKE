@@ -8,10 +8,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'is53(i@d3asxd8f=%3=)5)k45xauw+-pp2hkn=yvg+hhkij#jc'
+with open('myhostel/secret_key.txt', 'r') as f:
+    SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', False))
 
 ALLOWED_HOSTS = ['*']
 
@@ -90,9 +91,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "myhostel/static"),
-)
+# comment out if debug = True after collecting static
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, "myhostel/static"),
+# )
 
 
 # Internationalization
@@ -118,3 +120,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# comment out when debug is true
+STATIC_ROOT = os.path.join(BASE_DIR, 'myhostel/static')
+

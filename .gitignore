@@ -10,3 +10,4 @@ myhostel/db.sqlite3
 action/migrations/*
 book/migrations/*
 .vscode/
+*secret*
