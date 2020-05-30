@@ -1,16 +1,12 @@
 {% extends 'home/base.html' %}
+{% load staticfiles %}
 {% block title %}500 server error{% endblock title %}
 {% block crumb %}<li class="breadcrumb-item"><a href="/" aria-disabled="true">500</a></li>{% endblock crumb %}
 
 {% block content %}
-<style>
-    #main {
-        margin-top: 10vh;
-        margin-bottom: 19.7vh;
-    }
-</style>
+
 <div id="main" class="text-center">
-    <h1>505 error</h1>
+    <img style="height: 60vh;" src="{% static 'svg/500.svg' %}" alt="500 error graphic">
     <h2>Our servers have encountered a critical error processing your request.</h2>
 </div>
 

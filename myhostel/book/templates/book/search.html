@@ -138,8 +138,9 @@
             {% endif %}
         </div>
     {% else %}
-        <div class="failed-search">
+        <div class="failed-search text-center">
             <h1 class="text-center">No results for "{{ query }}"</h1>
+            <img style="height: 45vh;" src="{% static 'svg/no_results.svg'%}" alt="no results grpahic"/>
     
             <div class="container col-sm-6 text-center">
                 <p class="lead">Try specifying your institution eg "Kisii University Main campus"</p>
