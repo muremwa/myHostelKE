@@ -108,9 +108,6 @@ ul, ol {
     html {
         font-size: 12px;
     }
-    #over-view-image-div {
-        width: 88%;
-    }
 }
 
 @media screen and ( max-width: 992px){
@@ -123,44 +120,12 @@ ul, ol {
     }
 }
 
-@media screen and ( max-width: 977px){
-    #over-view-image-div {
-        width: 88%;
-    }
-
-    #over-view-image {
-        height: 90%;
-        margin-top: 5em;
-    }
-}
-
-@media screen and ( max-width: 848px){
-    #over-view-image-div {
-        width: 85%;
-    }
-
-    #over-view-image {
-        height: 85%;
-    }
-}
-
 @media screen and ( max-width: 767px){
     footer div {
         margin: 10px;
     }
 }
 
-
-@media screen and ( max-width: 740px){
-    #over-view-image-div {
-        width: 50%;
-    }
-
-    #over-view-image {
-        height: 40%;
-        margin-top: 13em;
-    }
-}
 
 @media screen and ( max-width: 569px){
     #contacts h5, #contacts dt, #contacts dd, #more-foot h5, #more-foot li, #part-1 {

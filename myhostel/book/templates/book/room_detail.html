@@ -3,7 +3,10 @@
 
 {% block title %}{{ room }}{% endblock title %}
 
-{% block style %}<link rel='stylesheet' type='text/css' href="{% static 'book/css/room.css' %}">{% endblock style %}
+{% block style %}
+<link rel='stylesheet' type='text/css' href="{% static 'book/css/room.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/over_view.css' %}">
+{% endblock style %}
 
 {% block book %}active{% endblock book %}
 
@@ -65,3 +68,5 @@
 {% include 'home/over_view.html' %}
 
 {% endblock content %}
+
+{% block script %}<script src="{% static 'js/overView.js' %}"></script>{% endblock script %}

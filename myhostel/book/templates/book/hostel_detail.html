@@ -6,12 +6,13 @@
 {% block style %}
 <link rel="stylesheet" type="text/css" href="{% static 'book/css/hostel_list.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'book/css/hostel_detail.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/over_view.css' %}">
 {% endblock style %}
 
 {% block book %}active{% endblock book %}
 
 {% block crumb %}
-<li class="breadcrumb-item"><a href="{% url 'book:index' %}">hostels</a></li>
+<li class="breadcrumb-item"><a href="{% url 'book:index' %}">hostels</a></link>
 <li class="breadcrumb-item active">{{ hostel.name }}</li>
 {% endblock crumb %}
 
@@ -72,7 +73,7 @@
 
         <div style="color: #4a4c64;">
             <div class="container text-center">
-                <h2>rooms at the {{ hostel.name }} {% if filtered %} <small>Filtered by {{ filtered }} <a href="{% url 'book:hostel' hostel.slug %}#available-rooms">See all rooms instead</a></small>{% endif %} ({{ rooms.count }})</h2>
+                <h2>rooms at the {{ hostel.name }} ({{ rooms.count }}){% if filtered %} <small>Filtered by {{ filtered }} <a href="{% url 'book:hostel' hostel.slug %}#available-rooms">See all rooms instead</a></small>{% endif %}</h2>
                 <ul id="room-filters">
                     <li><a href="?filtered=Bedsitter#available-rooms">bedsitters</a></li>
                     <li><a href="?filtered=Single Room#available-rooms">single rooms</a></li>
@@ -92,8 +93,12 @@
         </div>
         {% else %}
             <h2 class="text-center">
-                {{ hostel}} has no {{ filtered }} rooms available rooms for booking
-                <a href="{% url 'book:hostel' hostel.slug %}#available-rooms">See all rooms</a>
+                {% if filtered %}
+                    {{ hostel}} has no {{ filtered }} rooms available rooms for booking.
+                    <a href="{% url 'book:hostel' hostel.slug %}#available-rooms">See all rooms</a>
+                {% else %}
+                    {{ hostel}} has no rooms available for booking.
+                {% endif %}
             </h2>
         {% endif %}
     </div>
@@ -139,3 +144,6 @@
 	{% include 'home/over_view.html' %}
 
 {% endblock content %}
+
+
+{% block script %}<script src="{% static 'js/overView.js' %}"></script>{% endblock script %}
