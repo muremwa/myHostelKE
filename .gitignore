@@ -11,3 +11,4 @@ action/migrations/*
 book/migrations/*
 .vscode/
 *secret*
+!*defaults*
