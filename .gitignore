@@ -12,3 +12,4 @@ book/migrations/*
 .vscode/
 *secret*
 !*defaults*
+*.pyc
