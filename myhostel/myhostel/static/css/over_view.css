@@ -43,7 +43,7 @@
     transition: 0.4s;
 }
 
-.close {
+.overview-close {
 	fill: white;
 	margin-left: 95%;
 	height: 5vh;
