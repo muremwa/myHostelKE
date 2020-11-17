@@ -15,8 +15,11 @@ function collectAllImages (start) {
     /*
     collect urls for all images (main and other hostel and room images)
     */
-    let images = imageDivs.map(element => element.src);
-    const startIndex = images.findIndex(source => source === start);
+    let images = imageDivs.map(element => ({
+        source: element.src,
+        number: element.dataset.imgNumber
+    }));
+    const startIndex = images.findIndex(image => image.source === start);
 
     // the image shall now start with the image clicked then others follow
     images = images.concat(
@@ -32,6 +35,7 @@ function closeOverView() {
     /*
     Closes the over view
     */
+    history.replaceState(undefined, undefined, '#');
     document.getElementById("over-main").style.display = "none";
     document.documentElement.scrollTop = position;
     body.style.height = "";
@@ -44,10 +48,11 @@ function addImageToOverView(prev) {
     /*
     change the src attribute of the overall image
     */
-    const imageSource = prev? images[count - 1]: images[count + 1];
+    const image = prev? images[count - 1]: images[count + 1];
 
-    if (imageSource !== undefined) {
-        overViewImage.src = imageSource;
+    if (image !== undefined) {
+        overViewImage.src = image.source;
+        history.replaceState(undefined, undefined, `#i${image.number}`);
         count = prev? count - 1: count + 1;
     } else {
         // if you get to the end of the array of images, cycle back to the other end
@@ -99,12 +104,15 @@ function startOverView(e) {
     body.style.height = "100vh";
     body.style.overflow = "hidden";
 
+    // remember what image is shown
+    const imageNumber = e.target.dataset.imgNumber;
+    history.replaceState(undefined, undefined, `#i${imageNumber}`);
 
     // activate close button
     document.getElementById("close-over-view").addEventListener('click', closeOverView);
 
     images = collectAllImages(e.target.src);
-    overViewImage.src = images[count];
+    overViewImage.src = images[count]? images[count].source: '';
 
     // activate next image button
     document.getElementById("next-image").addEventListener('click', nextImage);
@@ -116,3 +124,12 @@ function startOverView(e) {
 
 // add a click listener to all imageDivs
 imageDivs.forEach(div => div.addEventListener('click', startOverView));
+
+
+// check if an image was already open
+const prevImage = window.location.hash.match(/i[0-9]{1,2}/g);
+
+if (prevImage) {
+    const layerImage = document.querySelector(`[data-img-number="${prevImage[0].replace('i', '')}"`);
+    layerImage? layerImage.click(): void 0;
+};

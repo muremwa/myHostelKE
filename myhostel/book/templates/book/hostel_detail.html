@@ -24,7 +24,7 @@
         <!-- Main image-->
         <div class="col-md-6">
             <h1 class="text-center">{{ hostel.name }} <small>at {{hostel.institution}}</small></h1>
-            <img name="main-image" id="big-image" class="over-js-img" src="{{ hostel.get_main_image }}" alt="main-image">
+            <img name="main-image" id="big-image" class="over-js-img" src="{{ hostel.get_main_image }}" alt="main-image" data-img-number="0">
         </div>
 
         <!-- Side bar with more info -->
@@ -42,7 +42,7 @@
                 {% for image in hostel.hostelimage_set.all %}
                     {% if not image.is_main %}
                         <div class="col-sm-4 image-div-hostel">
-                            <img data-toggle="tooltip" data-placement="top" title="click to enlarge" src="{{ image.file.url }}" alt="" class="other-hostel-images small-images over-js-img">
+                            <img data-toggle="tooltip" data-placement="top" title="click to enlarge" src="{{ image.file.url }}" alt="" class="other-hostel-images small-images over-js-img" data-img-number="{{ forloop.counter }}">
                         </div>                    
                     {% endif %}
                 {% endfor %}

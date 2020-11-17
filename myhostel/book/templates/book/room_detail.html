@@ -22,7 +22,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="top col-md-6">
-            <img id="big-image" class="over-js-img" src="{{ room.get_main_image }}" alt="">
+            <img id="big-image" class="over-js-img" src="{{ room.get_main_image }}" alt="" data-img-number="0">
         </div>
 
         <div class="info">
@@ -55,7 +55,7 @@
             {% for image in room.roomimage_set.all %}
                 {% if not image.is_main %}  
                     <div class="col-md-2 room-image">
-                        <img class="small-images over-js-img" src="{{ image.file.url }}" alt="">
+                        <img class="small-images over-js-img" src="{{ image.file.url }}" alt="" data-img-number="{{ forloop.counter }}">
                     </div> 
                 {% endif %}
             {% endfor %}
