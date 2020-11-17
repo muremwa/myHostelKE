@@ -91,7 +91,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# comment out if debug = True after collecting static
+# comment out if debug = False after collecting static
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, "myhostel/static"),
 # )

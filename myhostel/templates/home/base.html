@@ -144,6 +144,7 @@
         document.getElementById('c-y').innerText = smallDate.getFullYear();
       </script>
 
+        <!-- Cookie below -->
         {% if not cookie %}
         <div class="alert alert-info text-center" id="cookie-warning">
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -152,8 +153,8 @@
           <a href="{% url 'help:faq' 'privacy-policy' %}" class="btn btn-link">Learn more</a>
         </div>
         <script>
-          var acc = document.getElementById('accept-cookie');
-          acc.href = acc.href + window.location.pathname;
+          const acc = document.getElementById('accept-cookie');
+          acc.href = acc.href + window.location.pathname + window.location.search + window.location.hash;
         </script>
         {% endif %}
 
