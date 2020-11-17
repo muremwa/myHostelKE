@@ -149,7 +149,7 @@
         <div class="alert alert-info text-center" id="cookie-warning">
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
           <strong>Privacy warning</strong> This site requires cookies to provide you with its services. By proceeding into this site you accept the use cookies.<br />
-          <a id="accept-cookie" href="{% url 'help:accept-cookie' %}?next=" class="btn btn-success">I agree</a>
+          <a id="accept-cookie" data-og-link="{% url 'help:accept-cookie' %}?next=" href="{% url 'help:accept-cookie' %}?next=" class="btn btn-success">I agree</a>
           <a href="{% url 'help:faq' 'privacy-policy' %}" class="btn btn-link">Learn more</a>
         </div>
         <script>

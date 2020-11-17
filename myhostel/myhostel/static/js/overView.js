@@ -10,6 +10,26 @@ let count = 0;
 let position;
 
 
+function updateHash (imgNum) {
+    /* 
+        Update the 'accept cookies' button when an image is opened
+    */
+    const h = imgNum === null? '#': `#i${imgNum}`;
+    history.replaceState(undefined, undefined, h);
+
+    if (acceptCookies) {
+        const replaceImage = new CustomEvent('imageOpened', {
+            detail: {
+                imageNumber: imgNum,
+                hash: h
+            }
+        });
+    
+        acceptCookies.dispatchEvent(replaceImage);
+    };
+};
+
+
 
 function collectAllImages (start) {
     /*
@@ -35,7 +55,7 @@ function closeOverView() {
     /*
     Closes the over view
     */
-    history.replaceState(undefined, undefined, '#');
+    updateHash(null);
     document.getElementById("over-main").style.display = "none";
     document.documentElement.scrollTop = position;
     body.style.height = "";
@@ -52,7 +72,7 @@ function addImageToOverView(prev) {
 
     if (image !== undefined) {
         overViewImage.src = image.source;
-        history.replaceState(undefined, undefined, `#i${image.number}`);
+        updateHash(image.number);
         count = prev? count - 1: count + 1;
     } else {
         // if you get to the end of the array of images, cycle back to the other end
@@ -83,7 +103,6 @@ function previousImage(e) {
     if (count > -1) {
         addImageToOverView(true);
     }
-
 };
 
 
@@ -91,7 +110,6 @@ function startOverView(e) {
     /*
     Main event to show images
     */
-
 
     // remember position on page
     position = pageYOffset;
@@ -106,7 +124,7 @@ function startOverView(e) {
 
     // remember what image is shown
     const imageNumber = e.target.dataset.imgNumber;
-    history.replaceState(undefined, undefined, `#i${imageNumber}`);
+    updateHash(imageNumber)
 
     // activate close button
     document.getElementById("close-over-view").addEventListener('click', closeOverView);
