@@ -45,6 +45,10 @@
     min-height: 48vh;
 }
 
+.price-range {
+    text-transform: uppercase;
+}
+
 @media screen and ( max-width: 964px){
     .results {
         font-size: 10.5px;

@@ -35,7 +35,7 @@
                                     <div class="row">
                                         <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/school.svg' %}" alt=""> {{ result.institution }}</span></div>
                                         <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/place.svg' %}" alt=""> {{result.location}}</span></div>
-                                        <div class="col-sm-4 text-center"><span>{{ result.price_range}}</span></div>
+                                        <div class="col-sm-4 text-center"><span class="price-range">{{ result.price_range}}</span></div>
                                     </div>
                                 </div>
                             </a>
@@ -58,7 +58,7 @@
                                         <div class="row">
                                             <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/place.svg' %}" alt="place ico"> {{ result.location }}</span></div>
                                             <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/bed.svg' %}" alt=""> {% if result.available_rooms == 0 %}No{% else %}{{ result.available_rooms}} {% endif %} rooms available </span></div>
-                                            <div class="col-sm-4 text-center"><span>{{ result.price_range}}</span></div>
+                                            <div class="col-sm-4 text-center"><span class="price-range">{{ result.price_range}}</span></div>
                                         </div>
                                     </div>
                                 </a>
@@ -81,7 +81,7 @@
                                             <div class="row">
                                                 <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/school.svg' %}" alt="place ico"> {{ result.institution }}</span></div>
                                                 <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/bed.svg' %}" alt=""> {% if result.available_rooms == 0 %}No{% else %}{{ result.available_rooms}} {% endif %} rooms available </span></div>
-                                                <div class="col-sm-4 text-center"><span>{{ result.price_range}}</span></div>
+                                                <div class="col-sm-4 text-center"><span class="price-range">{{ result.price_range}}</span></div>
                                             </div>
                                         </div>
                                     </a>
@@ -95,7 +95,7 @@
                                     <div class="result" data-toggle="tooltip" data-placement="right" data-html="true" title="<img src='{{result.get_main_image}}' style='width: 100%;'> <br> <p>{{ result.distance_from_admin }} meters from admin</p>">
                                         <a href="{% url 'book:hostel' result.slug %}?filtered={{ advanced_lookup }}">
                                             <div class="result-name text-center">
-                                                <h3><strong>{{ result.name }}</strong><br/><small><br/>{{ result.price_range}}</small></h3>
+                                                <h3><strong>{{ result.name }}</strong><br/><small class="price-range"><br/>{{ result.price_range}}</small></h3>
                                                 <hr>
                                             </div>
 
@@ -129,7 +129,7 @@
                                 <div class="row">
                                     <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/school.svg' %}" alt=""> {{ result.institution }}</span></div>
                                     <div class="col-sm-4 text-center"><span><img class="locate-pin-hostel" src="{% static 'svg/bed.svg' %}" alt=""> {% if result.available_rooms == 0 %}No{% else %}{{ result.available_rooms}} {% endif %} rooms available </span></div>
-                                    <div class="col-sm-4 text-center"><span>KSH {{ result.price_range}}</span></div>
+                                    <div class="col-sm-4 text-center"><span class="price-range">{{ result.price_range }}</span></div>
                                 </div>
                             </div>
                         </a>
